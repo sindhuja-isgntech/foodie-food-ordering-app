@@ -1,36 +1,47 @@
 import React from 'react';
 import { Search, MapPin } from 'lucide-react';
+import { appConfig } from '../config/env';
 
-export const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
   return (
-    <div className="bg-gradient-to-r from-orange-50 to-amber-50 py-16 px-4 text-center">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-        Delicious Food Delivered To Your Doorstep
-      </h1>
-      <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-        Discover the best restaurants and food options in your city.
-      </p>
+    <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-12 text-center sm:py-16">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mx-auto mb-4 max-w-3xl text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
+          Delicious Food Delivered To Your Doorstep
+        </h1>
+        <p className="mx-auto mb-8 max-w-2xl text-base text-gray-600 sm:text-lg">
+          Discover the best restaurants and food options in your city.
+        </p>
 
-      <div className="max-w-3xl mx-auto bg-white p-2 md:p-3 rounded-2xl shadow-lg flex flex-col md:flex-row items-center gap-3">
-        <div className="flex items-center gap-2 px-3 w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 pb-2 md:pb-0">
-          <MapPin className="text-orange-500 w-5 h-5 shrink-0" />
-          <input
-            type="text"
-            placeholder="Select Location"
-            className="w-full focus:outline-none text-gray-700"
-          />
+        <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl bg-white p-2 shadow-lg md:flex-row md:p-3">
+          <div className="flex w-full items-center gap-2 border-b border-gray-200 px-3 pb-2 md:w-1/3 md:border-b-0 md:border-r md:pb-0">
+            <MapPin className="h-5 w-5 shrink-0 text-orange-500" />
+            <input
+              type="text"
+              defaultValue={appConfig.defaultLocation}
+              placeholder="Select Location"
+              className="w-full text-gray-700 focus:outline-none"
+            />
+          </div>
+          <div className="flex w-full items-center gap-2 px-3 md:w-2/3">
+            <Search className="h-5 w-5 shrink-0 text-gray-400" />
+            <input
+              type="text"
+              value={value}
+              onChange={(event) => onChange(event.target.value)}
+              placeholder="Search for food, cuisines, or restaurants..."
+              className="w-full text-gray-700 focus:outline-none"
+            />
+          </div>
+          <button className="w-full rounded-xl bg-orange-500 px-8 py-3 font-semibold text-white transition hover:bg-orange-600 md:w-auto">
+            Search
+          </button>
         </div>
-        <div className="flex items-center gap-2 px-3 w-full md:w-2/3">
-          <Search className="text-gray-400 w-5 h-5 shrink-0" />
-          <input
-            type="text"
-            placeholder="Search for food, cuisines, or restaurants..."
-            className="w-full focus:outline-none text-gray-700"
-          />
-        </div>
-        <button className="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-semibold transition">
-          Search
-        </button>
       </div>
     </div>
   );

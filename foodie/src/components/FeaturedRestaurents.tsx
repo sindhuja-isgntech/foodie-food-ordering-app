@@ -29,34 +29,58 @@ const restaurants: Restaurant[] = [
   },
 ];
 
-export const FeaturedRestaurants: React.FC = () => {
+interface FeaturedRestaurantsProps {
+  searchTerm?: string;
+}
+
+export const FeaturedRestaurants: React.FC<FeaturedRestaurantsProps> = ({ searchTerm = '' }) => {
+  const normalizedQuery = searchTerm.trim().toLowerCase();
+
+  const filteredRestaurants = restaurants.filter((res) => {
+    if (!normalizedQuery) {
+      return true;
+    }
+
+    return (
+      res.name.toLowerCase().includes(normalizedQuery) ||
+      res.tag.toLowerCase().includes(normalizedQuery)
+    );
+  });
+
   return (
-    <section id="featured" className="max-w-7xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Featured Restaurants</h2>
-      <div className="grid md:grid-cols-3 gap-6">
-        {restaurants.map((res) => (
-          <div
-            key={res.id}
-            className="bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition"
-          >
-            <img src={res.img} alt={res.name} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full font-medium">
-                {res.tag}
-              </span>
-              <h3 className="text-xl font-bold text-gray-800 mt-2">{res.name}</h3>
-              <div className="flex items-center gap-4 text-sm text-gray-600 mt-3">
-                <span className="flex items-center gap-1 text-amber-500 font-semibold">
-                  <Star className="w-4 h-4 fill-amber-400" /> {res.rating}
+    <section id="featured" className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <h2 className="mb-6 text-2xl font-bold text-gray-800">Featured Restaurants</h2>
+
+      {filteredRestaurants.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          No restaurants match “{searchTerm}”.
+        </div>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {filteredRestaurants.map((res) => (
+            <div
+              key={res.id}
+              className="overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
+            >
+              <img src={res.img} alt={res.name} className="h-48 w-full object-cover" />
+              <div className="p-4">
+                <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-600">
+                  {res.tag}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" /> {res.time}
-                </span>
+                <h3 className="mt-2 text-xl font-bold text-gray-800">{res.name}</h3>
+                <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                  <span className="flex items-center gap-1 font-semibold text-amber-500">
+                    <Star className="h-4 w-4 fill-amber-400" /> {res.rating}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" /> {res.time}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

@@ -12,16 +12,16 @@ const categories: Category[] = [
 
 export const Categories: React.FC = () => {
   return (
-    <section id="categories" className="max-w-7xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Explore Categories</h2>
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+    <section id="categories" className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <h2 className="mb-6 text-2xl font-bold text-gray-800">Explore Categories</h2>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {categories.map((cat) => (
           <div
             key={cat.id}
-            className="flex flex-col items-center justify-center p-4 bg-orange-50/50 hover:bg-orange-100 rounded-2xl cursor-pointer transition"
+            className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl bg-orange-50/50 p-4 transition hover:bg-orange-100"
           >
-            <span className="text-4xl mb-2">{cat.icon}</span>
-            <span className="font-semibold text-gray-700">{cat.name}</span>
+            <span className="mb-2 text-4xl">{cat.icon}</span>
+            <span className="text-center font-semibold text-gray-700">{cat.name}</span>
           </div>
         ))}
       </div>

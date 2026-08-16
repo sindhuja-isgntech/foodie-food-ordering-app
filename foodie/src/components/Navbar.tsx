@@ -1,75 +1,66 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, X } from 'lucide-react';
-import { appConfig } from '../config/env';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const location = useLocation();
+
+  const isActive = (path: string) =>
+    location.pathname === path
+      ? 'text-orange-500 font-semibold'
+      : 'hover:text-orange-500 transition';
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="rounded-xl bg-orange-500 p-2 text-xl font-bold text-white">F</span>
-            <span className="text-lg font-bold text-gray-800 sm:text-2xl">{appConfig.appName}</span>
-          </div>
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <Link to="/" className="flex items-center gap-2">
+            <span className="bg-orange-500 text-white p-2 rounded-xl font-bold text-xl">F</span>
+            <span className="text-2xl font-bold text-gray-800">Foodie</span>
+          </Link>
 
-          <div className="hidden items-center space-x-8 font-medium text-gray-600 md:flex">
-            <a href="#" className="text-orange-500">
+          <div className="hidden md:flex items-center space-x-8 font-medium text-gray-600">
+            <Link to="/" className={isActive('/')}>
               Home
-            </a>
-            <a href="#categories" className="transition hover:text-orange-500">
-              Categories
-            </a>
-            <a href="#featured" className="transition hover:text-orange-500">
+            </Link>
+            <Link to="/restaurants" className={isActive('/restaurants')}>
               Restaurants
-            </a>
-            <a href="#offers" className="transition hover:text-orange-500">
-              Offers
-            </a>
+            </Link>
           </div>
 
-          <div className="hidden items-center gap-4 md:flex">
+          <div className="hidden md:flex items-center gap-4">
             <button
-              className="rounded-full p-2 text-gray-600 transition hover:bg-gray-100"
+              className="p-2 hover:bg-gray-100 rounded-full text-gray-600"
               aria-label="View Cart"
             >
-              <ShoppingBag className="h-6 w-6" />
+              <ShoppingBag className="w-6 h-6" />
             </button>
-            <button className="rounded-full bg-orange-500 px-5 py-2 font-medium text-white transition hover:bg-orange-600">
+            <button className="bg-orange-500 text-white px-5 py-2 rounded-full font-medium hover:bg-orange-600 transition">
               Sign In
             </button>
           </div>
 
-          <div className="ml-auto flex items-center md:hidden">
+          <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-600"
               aria-label="Toggle Menu"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <div className="space-y-3 border-b bg-white px-4 pb-4 pt-2 md:hidden">
-          <a href="#" className="block font-medium text-orange-500">
+        <div className="md:hidden bg-white border-b px-4 pt-2 pb-4 space-y-3">
+          <Link to="/" onClick={() => setIsOpen(false)} className="block text-gray-600">
             Home
-          </a>
-          <a href="#categories" className="block text-gray-600">
-            Categories
-          </a>
-          <a href="#featured" className="block text-gray-600">
+          </Link>
+          <Link to="/restaurants" onClick={() => setIsOpen(false)} className="block text-gray-600">
             Restaurants
-          </a>
-          <a href="#offers" className="block text-gray-600">
-            Offers
-          </a>
-          <button className="mt-2 w-full rounded-full bg-orange-500 py-2 font-medium text-white">
-            Sign In
-          </button>
+          </Link>
         </div>
       )}
     </nav>

@@ -19,3 +19,18 @@ export interface FoodItem {
   price: string;
   img: string;
 }
+
+export interface Restaurant {
+  id: number;
+  name: string;
+  rating: number;
+  time: string;
+  img: string;
+  tag: string;
+  description?: string;
+  address?: string;
+  menu?: {
+    categories: string[];
+    items: FoodItem[];
+  };
+}

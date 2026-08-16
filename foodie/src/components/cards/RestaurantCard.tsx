@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Restaurant } from '../../types/foodie';
 import Rating from '../common/Rating';
@@ -8,8 +9,13 @@ interface RestaurantCardProps {
 }
 
 export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition flex flex-col justify-between">
+    <div
+      onClick={() => navigate(`/restaurant/${restaurant.id}`)}
+      className="bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between"
+    >
       <div>
         <div className="relative">
           <img src={restaurant.img} alt={restaurant.name} className="w-full h-48 object-cover" />

@@ -6,14 +6,6 @@ import CategoryCard from '../components/cards/CategoryCard';
 import EmptyState from '../components/common/EmptyState';
 import ErrorState from '../components/common/ErrorState';
 
-const mockCategories: Category[] = [
-  { id: 'all', name: 'All', icon: '🍽️' },
-  { id: 'fast-food', name: 'Fast Food', icon: '🍔' },
-  { id: 'italian', name: 'Italian', icon: '🍕' },
-  { id: 'japanese', name: 'Japanese', icon: '🍣' },
-  { id: 'asian', name: 'Asian', icon: '🍜' },
-];
-
 const mockRestaurants: Restaurant[] = [
   {
     id: 1,
@@ -47,6 +39,31 @@ const mockRestaurants: Restaurant[] = [
     img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=500&q=80',
     tag: 'Asian',
   },
+  {
+    id: 5,
+    name: 'Taj Mahal Palace',
+    rating: 4.9,
+    time: '25-35 min',
+    img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=500&q=80',
+    tag: 'Indian',
+  },
+  {
+    id: 6,
+    name: 'Royal Biryani House',
+    rating: 4.7,
+    time: '20-30 min',
+    img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=500&q=80',
+    tag: 'Indian',
+  },
+];
+
+const mockCategories: Category[] = [
+  { id: '1', name: 'All', icon: '🍽️' },
+  { id: '2', name: 'Fast Food', icon: '🍔' },
+  { id: '3', name: 'Italian', icon: '🍝' },
+  { id: '4', name: 'Japanese', icon: '🍣' },
+  { id: '5', name: 'Asian', icon: '🥢' },
+  { id: '6', name: 'Indian', icon: '🍛' },
 ];
 
 export const RestaurantListing: React.FC = () => {

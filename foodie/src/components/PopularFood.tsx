@@ -7,18 +7,24 @@ const items: FoodItem[] = [
     name: 'Pepperoni Pizza',
     price: '$12.99',
     img: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80',
+    description: 'Classic pepperoni pizza with fresh mozzarella and tomato sauce',
+    category: 'Pizza',
   },
   {
     id: 2,
     name: 'Double Cheese Burger',
     price: '$8.99',
     img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
+    description: 'Two beef patties with melted cheddar cheese and special sauce',
+    category: 'Burgers',
   },
   {
     id: 3,
     name: 'Ramen Noodle Soup',
     price: '$11.50',
     img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80',
+    description: 'Traditional ramen with rich broth and tender noodles',
+    category: 'Ramen',
   },
 ];
 

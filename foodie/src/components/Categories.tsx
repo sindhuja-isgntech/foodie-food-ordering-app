@@ -6,8 +6,9 @@ const categories: Category[] = [
   { id: '2', name: 'Burgers', icon: '🍔' },
   { id: '3', name: 'Sushi', icon: '🍣' },
   { id: '4', name: 'Asian', icon: '🍜' },
-  { id: '5', name: 'Desserts', icon: '🍰' },
-  { id: '6', name: 'Healthy', icon: '🥗' },
+  { id: '5', name: 'Indian', icon: '🍛' },
+  { id: '6', name: 'Desserts', icon: '🍰' },
+  { id: '7', name: 'Healthy', icon: '🥗' },
 ];
 
 export const Categories: React.FC = () => {

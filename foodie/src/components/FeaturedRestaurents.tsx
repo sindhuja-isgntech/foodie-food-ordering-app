@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Clock } from 'lucide-react';
 import type { Restaurant } from '../types/foodie';
 
@@ -34,6 +35,7 @@ interface FeaturedRestaurantsProps {
 }
 
 export const FeaturedRestaurants: React.FC<FeaturedRestaurantsProps> = ({ searchTerm = '' }) => {
+  const navigate = useNavigate();
   const normalizedQuery = searchTerm.trim().toLowerCase();
 
   const filteredRestaurants = restaurants.filter((res) => {
@@ -60,7 +62,8 @@ export const FeaturedRestaurants: React.FC<FeaturedRestaurantsProps> = ({ search
           {filteredRestaurants.map((res) => (
             <div
               key={res.id}
-              className="overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
+              onClick={() => navigate(`/restaurant/${res.id}`)}
+              className="overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md cursor-pointer"
             >
               <img src={res.img} alt={res.name} className="h-48 w-full object-cover" />
               <div className="p-4">

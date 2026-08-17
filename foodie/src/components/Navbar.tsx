@@ -1,68 +1,95 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 export const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { totalItemsCount, setIsCartOpen } = useCart();
   const location = useLocation();
+  const { cart = [], setIsCartOpen } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
 
-  const isActive = (path: string) =>
-    location.pathname === path ? 'text-orange-500 font-semibold' : 'hover:text-orange-500 transition';
+  // Mock authentication state (set to true to test logged-in profile view)
+  const isAuthenticated = true;
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="bg-orange-500 text-white p-2 rounded-xl font-bold text-xl">F</span>
-            <span className="text-2xl font-bold text-gray-800">Foodie</span>
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-md shadow-orange-500/30">
+            F
+          </div>
+          <span className="text-2xl font-black tracking-tight text-gray-900">
+            Foodie
+          </span>
+        </Link>
+
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          <Link
+            to="/"
+            className={`font-semibold text-sm transition ${
+              location.pathname === '/'
+                ? 'text-orange-500'
+                : 'text-gray-600 hover:text-orange-500'
+            }`}
+          >
+            Home
           </Link>
+          <Link
+            to="/restaurants"
+            className={`font-semibold text-sm transition ${
+              location.pathname === '/restaurants'
+                ? 'text-orange-500'
+                : 'text-gray-600 hover:text-orange-500'
+            }`}
+          >
+            Restaurants
+          </Link>
+        </nav>
 
-          <div className="hidden md:flex items-center space-x-8 font-medium text-gray-600">
-            <Link to="/" className={isActive('/')}>Home</Link>
-            <Link to="/restaurants" className={isActive('/restaurants')}>Restaurants</Link>
-          </div>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-4">
+          {/* Cart Icon */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2.5 text-gray-700 hover:bg-gray-100 rounded-full transition"
+            aria-label="Shopping Cart"
+          >
+            <ShoppingBag className="w-6 h-6" />
+            {totalItems > 0 && (
+              <span className="absolute top-1 right-1 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                {totalItems}
+              </span>
+            )}
+          </button>
 
-          <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 hover:bg-gray-100 rounded-full text-gray-600"
-              aria-label="View Cart"
+          {/* User Profile / Auth State */}
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition ${
+                location.pathname === '/profile'
+                  ? 'border-orange-500 bg-orange-50 text-orange-600'
+                  : 'border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
             >
-              <ShoppingBag className="w-6 h-6" />
-              {totalItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  {totalItemsCount}
-                </span>
-              )}
-            </button>
-            <button className="bg-orange-500 text-white px-5 py-2 rounded-full font-medium hover:bg-orange-600 transition">
+              <div className="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold text-xs">
+                <User className="w-4 h-4" />
+              </div>
+              <span className="hidden sm:inline font-semibold text-sm">Profile</span>
+            </Link>
+          ) : (
+            <Link
+              to="/signin"
+              className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-full shadow-md shadow-orange-500/20 transition"
+            >
               Sign In
-            </button>
-          </div>
-
-          <div className="md:hidden flex items-center gap-3">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-gray-600"
-              aria-label="View Cart"
-            >
-              <ShoppingBag className="w-6 h-6" />
-              {totalItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  {totalItemsCount}
-                </span>
-              )}
-            </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600" aria-label="Toggle Menu">
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+            </Link>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

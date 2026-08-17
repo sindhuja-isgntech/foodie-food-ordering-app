@@ -1,8 +1,10 @@
 import React from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
 export const CartDrawer: React.FC = () => {
+  const navigate = useNavigate();
   const {
     cart,
     removeFromCart,
@@ -18,6 +20,11 @@ export const CartDrawer: React.FC = () => {
   } = useCart();
 
   if (!isCartOpen) return null;
+
+  const handleCheckout = () => {
+    setIsCartOpen(false); // Close the cart drawer
+    navigate('/checkout'); // Redirect to checkout page
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -113,7 +120,7 @@ export const CartDrawer: React.FC = () => {
 
               <div className="pt-2 space-y-2">
                 <button
-                  onClick={() => alert('Proceeding to Checkout!')}
+                  onClick={handleCheckout}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition"
                 >
                   Checkout (${total.toFixed(2)})

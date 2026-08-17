@@ -16,6 +16,8 @@ import RestaurantListing from './pages/RestaurantListing';
 import RestaurantDetails from './pages/RestaurantDetails';
 import FoodDetails from './pages/FoodDetails';
 import NotFound from './pages/NotFound';
+import Checkout from './pages/Checkout';
+import Profile from './pages/Profile';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +58,8 @@ export const App: React.FC = () => {
                 <Route path="/restaurants" element={<RestaurantListing />} />
                 <Route path="/restaurant/:id" element={<RestaurantDetails />} />
                 <Route path="/food/:id" element={<FoodDetails />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>

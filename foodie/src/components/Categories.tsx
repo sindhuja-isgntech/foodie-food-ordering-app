@@ -1,7 +1,13 @@
 import React from 'react';
-import type { Category } from '../types/foodie';
+import { useNavigate } from 'react-router-dom';
 
-const categories: Category[] = [
+interface CategoryItem {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+const categories: CategoryItem[] = [
   { id: '1', name: 'Pizza', icon: '🍕' },
   { id: '2', name: 'Burgers', icon: '🍔' },
   { id: '3', name: 'Sushi', icon: '🍣' },
@@ -11,18 +17,30 @@ const categories: Category[] = [
   { id: '7', name: 'Healthy', icon: '🥗' },
 ];
 
+
+
 export const Categories: React.FC = () => {
+  const navigate = useNavigate();
+  const handleCategoryClick = (categoryName: string) => {
+    // Navigate to restaurants listing pre-filtered by selected category
+    navigate(`/restaurants?category=${encodeURIComponent(categoryName)}`);
+  };
   return (
-    <section id="categories" className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h2 className="mb-6 text-2xl font-bold text-gray-800">Explore Categories</h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+    <section className="max-w-7xl mx-auto px-4 py-8">
+      <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Explore Categories</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
         {categories.map((cat) => (
           <div
             key={cat.id}
-            className="flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl bg-orange-50/50 p-4 transition hover:bg-orange-100"
+            onClick={() => handleCategoryClick(cat.name)}
+            className="flex flex-col items-center justify-center p-6 bg-orange-50/40 hover:bg-orange-100/60 rounded-2xl cursor-pointer transition transform hover:-translate-y-1 shadow-sm border border-orange-100/50 group"
           >
-            <span className="mb-2 text-4xl">{cat.icon}</span>
-            <span className="text-center font-semibold text-gray-700">{cat.name}</span>
+            <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">
+              {cat.icon}
+            </span>
+            <span className="text-sm font-bold text-gray-700 group-hover:text-orange-600 transition">
+              {cat.name}
+            </span>
           </div>
         ))}
       </div>

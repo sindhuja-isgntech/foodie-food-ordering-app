@@ -6,6 +6,7 @@ import CategoryCard from '../components/cards/CategoryCard';
 import Loader from '../components/common/Loader';
 import EmptyState from '../components/common/EmptyState';
 import ErrorState from '../components/common/ErrorState';
+import { useSearchParams } from 'react-router-dom';
 
 type SortOption = 'default' | 'rating-desc' | 'name-asc';
 
@@ -17,6 +18,9 @@ export const RestaurantListing: React.FC = () => {
   // TanStack Query hooks
   const { data: categories, isLoading: isLoadingCategories } = useCategories();
   const { data: restaurants, isLoading, isError, error, refetch } = useRestaurants();
+
+const [searchParams, setSearchParams] = useSearchParams();
+const categoryQuery = searchParams.get('category');
 
   // Filter and Sort logic
   const processedRestaurants = useMemo(() => {
@@ -45,6 +49,16 @@ export const RestaurantListing: React.FC = () => {
     setSelectedCategory('All');
     setSortBy('default');
   };
+
+const handleCategorySelect = (categoryName: string) => {
+  setSelectedCategory(categoryName);
+  if (categoryName === 'All') {
+    searchParams.delete('category');
+  } else {
+    searchParams.set('category', categoryName);
+  }
+  setSearchParams(searchParams);
+};
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -90,7 +104,7 @@ export const RestaurantListing: React.FC = () => {
                 key={cat.id}
                 category={cat}
                 isSelected={selectedCategory === cat.name}
-                onClick={() => setSelectedCategory(cat.name)}
+                onClick={() => handleCategorySelect(cat.name)}
               />
             ))}
           </div>

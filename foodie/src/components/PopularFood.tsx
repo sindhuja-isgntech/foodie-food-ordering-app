@@ -1,5 +1,6 @@
 import React from 'react';
 import type { FoodItem } from '../types/foodie';
+import { useCart } from '../context/CartContext';
 
 const items: FoodItem[] = [
   {
@@ -33,6 +34,7 @@ interface PopularFoodProps {
 }
 
 export const PopularFood: React.FC<PopularFoodProps> = ({ searchTerm = '' }) => {
+  const { addToCart } = useCart();
   const normalizedQuery = searchTerm.trim().toLowerCase();
 
   const filteredItems = items.filter((item) => {
@@ -67,7 +69,11 @@ export const PopularFood: React.FC<PopularFoodProps> = ({ searchTerm = '' }) => 
                 <div className="flex-1">
                   <h3 className="font-bold text-gray-800">{item.name}</h3>
                   <p className="mt-1 font-bold text-orange-500">{item.price}</p>
-                  <button className="mt-3 rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white transition hover:bg-orange-500">
+                  <button
+                    type="button"
+                    onClick={() => addToCart(item)}
+                    className="mt-3 rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white transition hover:bg-orange-500"
+                  >
                     Add to Cart
                   </button>
                 </div>

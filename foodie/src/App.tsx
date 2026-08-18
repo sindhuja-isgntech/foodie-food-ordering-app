@@ -38,8 +38,8 @@ const HomePage: React.FC = () => {
         onChange={(value: string) => setSearchValue(value)}
       />
       <Categories />
-      <FeaturedRestaurants />
-      <PopularFood />
+      <FeaturedRestaurants searchTerm={searchValue} />
+      <PopularFood searchTerm={searchValue} />
       <Offers />
     </>
   );

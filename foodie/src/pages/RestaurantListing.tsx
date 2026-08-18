@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, ArrowUpDown } from 'lucide-react';
 import { useRestaurants, useCategories } from '../hooks/useRestaurants';
 import RestaurantCard from '../components/cards/RestaurantCard';
@@ -21,6 +21,13 @@ export const RestaurantListing: React.FC = () => {
 
 const [searchParams, setSearchParams] = useSearchParams();
 const categoryQuery = searchParams.get('category');
+
+  // Initialize selectedCategory from URL query parameter
+  useEffect(() => {
+    if (categoryQuery) {
+      setSelectedCategory(categoryQuery);
+    }
+  }, [categoryQuery]);
 
   // Filter and Sort logic
   const processedRestaurants = useMemo(() => {
@@ -99,7 +106,21 @@ const handleCategorySelect = (categoryName: string) => {
         <div className="mb-8">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Cuisines</h2>
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-            {categories.map((cat) => (
+            <button
+              onClick={() => {
+                setSelectedCategory('All');
+                searchParams.delete('category');
+                setSearchParams(searchParams);
+              }}
+              className={`p-3 rounded-xl font-semibold text-sm transition ${
+                selectedCategory === 'All'
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              All Cuisines
+            </button>
+            {categories.filter((cat) => cat.name !== 'All').map((cat) => (
               <CategoryCard
                 key={cat.id}
                 category={cat}

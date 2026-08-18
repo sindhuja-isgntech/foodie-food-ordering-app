@@ -1,5 +1,14 @@
 import React from 'react';
-import { ShoppingBag, Clock, Store, AlertCircle, CheckCircle2, Truck, Package, XCircle } from 'lucide-react';
+import {
+  ShoppingBag,
+  Clock,
+  Store,
+  AlertCircle,
+  CheckCircle2,
+  Truck,
+  Package,
+  XCircle,
+} from 'lucide-react';
 import { useOrders } from '../context/OrderContext';
 import type { OrderStatus } from '../context/OrderContext';
 

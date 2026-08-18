@@ -29,19 +29,21 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem('foodie_orders');
-    return saved ? JSON.parse(saved) : [
-      {
-        id: 'ORD-9824',
-        date: '2026-08-16 14:30',
-        restaurantName: 'Taj Mahal Palace',
-        items: [
-          { id: 501, name: 'Butter Chicken', price: 15.99, quantity: 1 },
-          { id: 504, name: 'Garlic Butter Naan', price: 3.49, quantity: 2 },
-        ],
-        totalAmount: 26.96,
-        status: 'Delivered',
-      },
-    ];
+    return saved
+      ? JSON.parse(saved)
+      : [
+          {
+            id: 'ORD-9824',
+            date: '2026-08-16 14:30',
+            restaurantName: 'Taj Mahal Palace',
+            items: [
+              { id: 501, name: 'Butter Chicken', price: 15.99, quantity: 1 },
+              { id: 504, name: 'Garlic Butter Naan', price: 3.49, quantity: 2 },
+            ],
+            totalAmount: 26.96,
+            status: 'Delivered',
+          },
+        ];
   });
 
   useEffect(() => {
@@ -63,8 +65,8 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       prev.map((order) =>
         order.id === orderId && order.status !== 'Delivered'
           ? { ...order, status: 'Cancelled' as OrderStatus }
-          : order
-      )
+          : order,
+      ),
     );
   };
 

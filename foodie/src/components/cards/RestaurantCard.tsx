@@ -18,10 +18,10 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
     >
       <div>
         <div className="relative overflow-hidden">
-          <img 
-            src={restaurant.img} 
-            alt={restaurant.name} 
-            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" 
+          <img
+            src={restaurant.img}
+            alt={restaurant.name}
+            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <span className="absolute top-3 left-3 text-xs bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1.5 rounded-full font-semibold shadow-lg backdrop-blur-sm">
@@ -44,7 +44,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
               <span className="font-semibold text-gray-700">{restaurant.rating}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4 text-orange-500" /> 
+              <Clock className="w-4 h-4 text-orange-500" />
               <span className="font-medium">{restaurant.time}</span>
             </div>
           </div>

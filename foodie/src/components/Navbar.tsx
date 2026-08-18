@@ -29,13 +29,13 @@ export const Navbar: React.FC = () => {
           <Link
             to="/"
             className={`font-semibold text-sm transition-all duration-300 relative group ${
-              location.pathname === '/'
-                ? 'text-orange-600'
-                : 'text-gray-600 hover:text-orange-600'
+              location.pathname === '/' ? 'text-orange-600' : 'text-gray-600 hover:text-orange-600'
             }`}
           >
             Home
-            <span className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${location.pathname === '/' ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+            <span
+              className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${location.pathname === '/' ? 'w-full' : 'w-0 group-hover:w-full'}`}
+            />
           </Link>
           <Link
             to="/restaurants"
@@ -46,7 +46,22 @@ export const Navbar: React.FC = () => {
             }`}
           >
             Restaurants
-            <span className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${location.pathname === '/restaurants' ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+            <span
+              className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${location.pathname === '/restaurants' ? 'w-full' : 'w-0 group-hover:w-full'}`}
+            />
+          </Link>
+          <Link
+            to="/orders"
+            className={`font-semibold text-sm transition-all duration-300 relative group ${
+              location.pathname === '/orders'
+                ? 'text-orange-600'
+                : 'text-gray-600 hover:text-orange-600'
+            }`}
+          >
+            Orders
+            <span
+              className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${location.pathname === '/orders' ? 'w-full' : 'w-0 group-hover:w-full'}`}
+            />
           </Link>
         </nav>
 

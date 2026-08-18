@@ -19,8 +19,8 @@ export const RestaurantListing: React.FC = () => {
   const { data: categories, isLoading: isLoadingCategories } = useCategories();
   const { data: restaurants, isLoading, isError, error, refetch } = useRestaurants();
 
-const [searchParams, setSearchParams] = useSearchParams();
-const categoryQuery = searchParams.get('category');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryQuery = searchParams.get('category');
 
   // Initialize selectedCategory from URL query parameter
   useEffect(() => {
@@ -57,15 +57,15 @@ const categoryQuery = searchParams.get('category');
     setSortBy('default');
   };
 
-const handleCategorySelect = (categoryName: string) => {
-  setSelectedCategory(categoryName);
-  if (categoryName === 'All') {
-    searchParams.delete('category');
-  } else {
-    searchParams.set('category', categoryName);
-  }
-  setSearchParams(searchParams);
-};
+  const handleCategorySelect = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    if (categoryName === 'All') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', categoryName);
+    }
+    setSearchParams(searchParams);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -120,14 +120,16 @@ const handleCategorySelect = (categoryName: string) => {
             >
               All Cuisines
             </button>
-            {categories.filter((cat) => cat.name !== 'All').map((cat) => (
-              <CategoryCard
-                key={cat.id}
-                category={cat}
-                isSelected={selectedCategory === cat.name}
-                onClick={() => handleCategorySelect(cat.name)}
-              />
-            ))}
+            {categories
+              .filter((cat) => cat.name !== 'All')
+              .map((cat) => (
+                <CategoryCard
+                  key={cat.id}
+                  category={cat}
+                  isSelected={selectedCategory === cat.name}
+                  onClick={() => handleCategorySelect(cat.name)}
+                />
+              ))}
           </div>
         </div>
       )}
@@ -142,7 +144,8 @@ const handleCategorySelect = (categoryName: string) => {
       ) : (
         <div>
           <p className="text-sm text-gray-500 mb-4 font-medium">
-            Showing {processedRestaurants.length} restaurant{processedRestaurants.length > 1 ? 's' : ''}
+            Showing {processedRestaurants.length} restaurant
+            {processedRestaurants.length > 1 ? 's' : ''}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {processedRestaurants.map((restaurant) => (

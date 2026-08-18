@@ -55,19 +55,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const increaseQuantity = (id: number) => {
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+      prevCart.map((item) => (item.id === id ? { ...item, quantity: item.quantity + 1 } : item)),
     );
   };
 
   const decreaseQuantity = (id: number) => {
     setCart((prevCart) =>
       prevCart
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-        )
-        .filter((item) => item.quantity > 0)
+        .map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
+        .filter((item) => item.quantity > 0),
     );
   };
 
@@ -76,10 +72,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Cart Calculations
-  const subtotal = cart.reduce(
-    (sum, item) => sum + parsePrice(item.price) * item.quantity,
-    0
-  );
+  const subtotal = cart.reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0);
   const deliveryFee = cart.length > 0 ? DELIVERY_FEE : 0;
   const tax = subtotal * TAX_RATE;
   const total = subtotal + deliveryFee + tax;

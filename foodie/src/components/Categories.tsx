@@ -20,13 +20,13 @@ export const Categories: React.FC = () => {
         <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Explore Categories</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div 
-              key={i} 
-              className="h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl animate-pulse" 
+            <div
+              key={i}
+              className="h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl animate-pulse"
               style={{
                 backgroundImage: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
                 backgroundSize: '200% 100%',
-                animation: 'shimmer 2s infinite'
+                animation: 'shimmer 2s infinite',
               }}
             />
           ))}
@@ -48,12 +48,13 @@ export const Categories: React.FC = () => {
             onClick={() => handleCategoryClick(cat.name)}
             className="group cursor-pointer"
             style={{
-              animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
+              animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
             }}
           >
-            <div className="flex flex-col items-center justify-center p-6 rounded-2xl cursor-pointer transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-md hover:shadow-xl border border-transparent hover:border-orange-200"
+            <div
+              className="flex flex-col items-center justify-center p-6 rounded-2xl cursor-pointer transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-md hover:shadow-xl border border-transparent hover:border-orange-200"
               style={{
-                background: `linear-gradient(135deg, ${['#fff5f0', '#fff8e1', '#f0f4ff', '#f5f0ff', '#f0fff4', '#fffbf0'][index % 6]} 0%, white 100%)`
+                background: `linear-gradient(135deg, ${['#fff5f0', '#fff8e1', '#f0f4ff', '#f5f0ff', '#f0fff4', '#fffbf0'][index % 6]} 0%, white 100%)`,
               }}
             >
               <span className="text-4xl mb-3 group-hover:scale-125 transition-transform duration-300">

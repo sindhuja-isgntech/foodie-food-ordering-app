@@ -22,9 +22,30 @@ const mockRestaurants: Restaurant[] = [
     menu: {
       categories: ['All', 'Burgers', 'Sides', 'Drinks'],
       items: [
-        { id: 101, name: 'Double Cheese Burger', price: '$8.99', description: 'Two beef patties, cheddar cheese, secret sauce', img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80', category: 'Burgers' },
-        { id: 102, name: 'Bacon Smokey Burger', price: '$10.49', description: 'Crispy bacon, smoked gouda, BBQ sauce', img: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=400&q=80', category: 'Burgers' },
-        { id: 103, name: 'Crispy French Fries', price: '$3.99', description: 'Golden salted fries served with garlic aioli', img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80', category: 'Sides' },
+        {
+          id: 101,
+          name: 'Double Cheese Burger',
+          price: '$8.99',
+          description: 'Two beef patties, cheddar cheese, secret sauce',
+          img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
+          category: 'Burgers',
+        },
+        {
+          id: 102,
+          name: 'Bacon Smokey Burger',
+          price: '$10.49',
+          description: 'Crispy bacon, smoked gouda, BBQ sauce',
+          img: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=400&q=80',
+          category: 'Burgers',
+        },
+        {
+          id: 103,
+          name: 'Crispy French Fries',
+          price: '$3.99',
+          description: 'Golden salted fries served with garlic aioli',
+          img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80',
+          category: 'Sides',
+        },
       ],
     },
   },
@@ -40,8 +61,22 @@ const mockRestaurants: Restaurant[] = [
     menu: {
       categories: ['All', 'Pasta', 'Pizza', 'Desserts'],
       items: [
-        { id: 201, name: 'Fettuccine Alfredo', price: '$14.99', description: 'Creamy parmesan sauce over fresh handmade fettuccine', img: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=400&q=80', category: 'Pasta' },
-        { id: 202, name: 'Margherita Pizza', price: '$13.50', description: 'Fresh basil, mozzarella, and San Marzano tomato sauce', img: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=400&q=80', category: 'Pizza' },
+        {
+          id: 201,
+          name: 'Fettuccine Alfredo',
+          price: '$14.99',
+          description: 'Creamy parmesan sauce over fresh handmade fettuccine',
+          img: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=400&q=80',
+          category: 'Pasta',
+        },
+        {
+          id: 202,
+          name: 'Margherita Pizza',
+          price: '$13.50',
+          description: 'Fresh basil, mozzarella, and San Marzano tomato sauce',
+          img: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=400&q=80',
+          category: 'Pizza',
+        },
       ],
     },
   },
@@ -58,10 +93,38 @@ const mockRestaurants: Restaurant[] = [
     menu: {
       categories: ['All', 'Rolls', 'Sashimi', 'Appetizers'],
       items: [
-        { id: 301, name: 'Salmon Avocado Roll', price: '$12.00', description: 'Fresh Atlantic salmon wrapped with creamy avocado', img: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=400&q=80', category: 'Rolls' },
-        { id: 302, name: 'Tuna Sashimi (5 pcs)', price: '$16.50', description: 'Thinly sliced raw bluefin tuna', img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=400&q=80', category: 'Sashimi' },
-        { id: 303, name: 'Dragon Roll', price: '$14.99', description: 'Eel, cucumber topped with avocado and unagi sauce', img: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=400&q=80', category: 'Rolls' },
-        { id: 304, name: 'Steamed Edamame', price: '$4.99', description: 'Salted Japanese soybeans in pod', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80', category: 'Appetizers' },
+        {
+          id: 301,
+          name: 'Salmon Avocado Roll',
+          price: '$12.00',
+          description: 'Fresh Atlantic salmon wrapped with creamy avocado',
+          img: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=400&q=80',
+          category: 'Rolls',
+        },
+        {
+          id: 302,
+          name: 'Tuna Sashimi (5 pcs)',
+          price: '$16.50',
+          description: 'Thinly sliced raw bluefin tuna',
+          img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=400&q=80',
+          category: 'Sashimi',
+        },
+        {
+          id: 303,
+          name: 'Dragon Roll',
+          price: '$14.99',
+          description: 'Eel, cucumber topped with avocado and unagi sauce',
+          img: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=400&q=80',
+          category: 'Rolls',
+        },
+        {
+          id: 304,
+          name: 'Steamed Edamame',
+          price: '$4.99',
+          description: 'Salted Japanese soybeans in pod',
+          img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
+          category: 'Appetizers',
+        },
       ],
     },
   },
@@ -77,10 +140,38 @@ const mockRestaurants: Restaurant[] = [
     menu: {
       categories: ['All', 'Ramen', 'Sides', 'Tea'],
       items: [
-        { id: 401, name: 'Tonkotsu Pork Ramen', price: '$13.99', description: 'Rich pork bone broth with chashu pork, soft egg, and bamboo', img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80', category: 'Ramen' },
-        { id: 402, name: 'Spicy Miso Ramen', price: '$14.50', description: 'Spicy miso broth with ground pork, corn, and chili oil', img: 'https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&w=400&q=80', category: 'Ramen' },
-        { id: 403, name: 'Pork Gyoza (6 pcs)', price: '$6.50', description: 'Pan-fried Japanese dumplings with soy dip', img: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=400&q=80', category: 'Sides' },
-        { id: 404, name: 'Matcha Iced Green Tea', price: '$3.99', description: 'Refreshing Japanese cold brew green tea', img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80', category: 'Tea' },
+        {
+          id: 401,
+          name: 'Tonkotsu Pork Ramen',
+          price: '$13.99',
+          description: 'Rich pork bone broth with chashu pork, soft egg, and bamboo',
+          img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80',
+          category: 'Ramen',
+        },
+        {
+          id: 402,
+          name: 'Spicy Miso Ramen',
+          price: '$14.50',
+          description: 'Spicy miso broth with ground pork, corn, and chili oil',
+          img: 'https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&w=400&q=80',
+          category: 'Ramen',
+        },
+        {
+          id: 403,
+          name: 'Pork Gyoza (6 pcs)',
+          price: '$6.50',
+          description: 'Pan-fried Japanese dumplings with soy dip',
+          img: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=400&q=80',
+          category: 'Sides',
+        },
+        {
+          id: 404,
+          name: 'Matcha Iced Green Tea',
+          price: '$3.99',
+          description: 'Refreshing Japanese cold brew green tea',
+          img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80',
+          category: 'Tea',
+        },
       ],
     },
   },
@@ -91,17 +182,32 @@ const mockRestaurants: Restaurant[] = [
     time: '25-35 min',
     img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=500&q=80',
     tag: 'Indian',
-    description: 'Authentic North & South Indian fine dining featuring rich curries, tandoori specialties, and freshly baked breads.',
+    description:
+      'Authentic North & South Indian fine dining featuring rich curries, tandoori specialties, and freshly baked breads.',
     address: '202 Curry Spice Lane, Midtown',
     menu: {
       categories: ['All', 'Curries', 'Starters', 'Breads'],
       items: [
-        { id: 501, name: 'Butter Chicken', price: '$15.99', description: 'Tender chicken cooked in a rich, velvety tomato and butter cream sauce', img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80', category: 'Curries' },
-        { id: 502, name: 'Garlic Butter Naan', price: '$3.49', description: 'Freshly baked tandoori flatbread brushed with garlic and melted butter', img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=400&q=80', category: 'Breads' },
+        {
+          id: 501,
+          name: 'Butter Chicken',
+          price: '$15.99',
+          description: 'Tender chicken cooked in a rich, velvety tomato and butter cream sauce',
+          img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80',
+          category: 'Curries',
+        },
+        {
+          id: 502,
+          name: 'Garlic Butter Naan',
+          price: '$3.49',
+          description: 'Freshly baked tandoori flatbread brushed with garlic and melted butter',
+          img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=400&q=80',
+          category: 'Breads',
+        },
       ],
     },
   },
-{
+  {
     id: 6,
     name: 'Royal Biryani House',
     rating: 4.7,
@@ -113,34 +219,68 @@ const mockRestaurants: Restaurant[] = [
     menu: {
       categories: ['All', 'Biryani', 'Kebabs', 'Drinks'],
       items: [
-        { id: 601, name: 'Hyderabadi Chicken Dum Biryani', price: '$14.99', description: 'Fragrant basmati rice slow-cooked with marinated chicken and aromatic spices', img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80', category: 'Biryani' },
-        { id: 602, name: 'Lamb Shank Dum Biryani', price: '$17.49', description: 'Tender slow-cooked lamb shank served over saffron basmati rice', img: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=400&q=80', category: 'Biryani' },
-        { id: 603, name: 'Chicken Seekh Kebab', price: '$11.99', description: 'Minced chicken skewers spiced with herbs and cooked over charcoal', img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80', category: 'Kebabs' },
-        { id: 604, name: 'Mango Lassi', price: '$3.99', description: 'Traditional chilled yogurt drink blended with sweet Alphonso mango pulp', img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80', category: 'Drinks' },
+        {
+          id: 601,
+          name: 'Hyderabadi Chicken Dum Biryani',
+          price: '$14.99',
+          description:
+            'Fragrant basmati rice slow-cooked with marinated chicken and aromatic spices',
+          img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80',
+          category: 'Biryani',
+        },
+        {
+          id: 602,
+          name: 'Lamb Shank Dum Biryani',
+          price: '$17.49',
+          description: 'Tender slow-cooked lamb shank served over saffron basmati rice',
+          img: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=400&q=80',
+          category: 'Biryani',
+        },
+        {
+          id: 603,
+          name: 'Chicken Seekh Kebab',
+          price: '$11.99',
+          description: 'Minced chicken skewers spiced with herbs and cooked over charcoal',
+          img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80',
+          category: 'Kebabs',
+        },
+        {
+          id: 604,
+          name: 'Mango Lassi',
+          price: '$3.99',
+          description: 'Traditional chilled yogurt drink blended with sweet Alphonso mango pulp',
+          img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80',
+          category: 'Drinks',
+        },
       ],
     },
   },
-
 ];
 
-// Service functions simulating API calls (replace with real axios requests like: return (await axiosClient.get('/restaurants')).data)
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const mockApi = async <T>(data: T, delay = 400): Promise<T> => {
+  await wait(delay);
+  return data;
+};
+
+// Mock API layer that mimics real backend calls without a server.
 export const restaurantService = {
   fetchCategories: async (): Promise<Category[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return mockCategories;
+    return mockApi(mockCategories, 300);
   },
 
   fetchRestaurants: async (): Promise<Restaurant[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    return mockRestaurants;
+    return mockApi(mockRestaurants, 600);
   },
 
   fetchRestaurantById: async (id: number): Promise<Restaurant> => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
     const restaurant = mockRestaurants.find((r) => r.id === id);
+
     if (!restaurant) {
       throw new Error(`Restaurant with ID ${id} not found.`);
     }
-    return restaurant;
+
+    return mockApi(restaurant, 500);
   },
 };

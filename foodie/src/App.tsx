@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CartProvider } from './context/CartContext';
+import { OrderProvider } from './context/OrderContext';
 import CartDrawer from './components/cart/CartDrawer';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -18,6 +19,7 @@ import FoodDetails from './pages/FoodDetails';
 import NotFound from './pages/NotFound';
 import Checkout from './pages/Checkout';
 import Profile from './pages/Profile';
+import Orders from './pages/Orders';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,10 +35,7 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <SearchBar
-        value={searchValue}
-        onChange={(value: string) => setSearchValue(value)}
-      />
+      <SearchBar value={searchValue} onChange={(value: string) => setSearchValue(value)} />
       <Categories />
       <FeaturedRestaurants searchTerm={searchValue} />
       <PopularFood searchTerm={searchValue} />
@@ -49,24 +48,27 @@ export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
-        <Router>
-          <div className="min-h-screen bg-white font-sans flex flex-col justify-between">
-            <div>
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/restaurants" element={<RestaurantListing />} />
-                <Route path="/restaurant/:id" element={<RestaurantDetails />} />
-                <Route path="/food/:id" element={<FoodDetails />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+        <OrderProvider>
+          <Router>
+            <div className="min-h-screen bg-white font-sans flex flex-col justify-between">
+              <div>
+                <Navbar />
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/restaurants" element={<RestaurantListing />} />
+                  <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+                  <Route path="/food/:id" element={<FoodDetails />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+              <Footer />
+              <CartDrawer />
             </div>
-            <Footer />
-            <CartDrawer />
-          </div>
-        </Router>
+          </Router>
+        </OrderProvider>
       </CartProvider>
     </QueryClientProvider>
   );

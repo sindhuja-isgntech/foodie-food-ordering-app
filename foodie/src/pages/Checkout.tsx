@@ -2,42 +2,51 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CreditCard, Smartphone, Banknote, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import {
+  CreditCard,
+  Smartphone,
+  Banknote,
+  CheckCircle2,
+  ShieldCheck,
+  ArrowRight,
+} from 'lucide-react';
 import { Input } from '../components/ui/Input';
 import { useCart } from '../context/CartContext';
 
-const checkoutSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  phone: z.string().regex(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
-  address: z.string().min(5, 'Street address is required'),
-  city: z.string().min(2, 'City is required'),
-  zipCode: z.string().min(5, 'Valid ZIP code required'),
-  paymentMethod: z.enum(['card', 'upi', 'cod']),
-  cardNumber: z.string().optional(),
-  cardExpiry: z.string().optional(),
-  cardCvc: z.string().optional(),
-  upiId: z.string().optional(),
-}).refine(
-  (data) => {
-    if (data.paymentMethod === 'card') {
-      return (
-        !!data.cardNumber &&
-        /^[0-9]{16}$/.test(data.cardNumber) &&
-        !!data.cardExpiry &&
-        !!data.cardCvc
-      );
-    }
-    if (data.paymentMethod === 'upi') {
-      return !!data.upiId && data.upiId.includes('@');
-    }
-    return true;
-  },
-  {
-    message: 'Please complete your payment details correctly',
-    path: ['paymentMethod'],
-  }
-);
+const checkoutSchema = z
+  .object({
+    fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    phone: z.string().regex(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+    address: z.string().min(5, 'Street address is required'),
+    city: z.string().min(2, 'City is required'),
+    zipCode: z.string().min(5, 'Valid ZIP code required'),
+    paymentMethod: z.enum(['card', 'upi', 'cod']),
+    cardNumber: z.string().optional(),
+    cardExpiry: z.string().optional(),
+    cardCvc: z.string().optional(),
+    upiId: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.paymentMethod === 'card') {
+        return (
+          !!data.cardNumber &&
+          /^[0-9]{16}$/.test(data.cardNumber) &&
+          !!data.cardExpiry &&
+          !!data.cardCvc
+        );
+      }
+      if (data.paymentMethod === 'upi') {
+        return !!data.upiId && data.upiId.includes('@');
+      }
+      return true;
+    },
+    {
+      message: 'Please complete your payment details correctly',
+      path: ['paymentMethod'],
+    },
+  );
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
@@ -76,7 +85,8 @@ export const Checkout: React.FC = () => {
         </div>
         <h2 className="text-2xl font-extrabold text-gray-900 mb-2">Order Confirmed!</h2>
         <p className="text-gray-500 text-sm mb-6">
-          Thank you for your order. We've sent a confirmation email with your order tracking details.
+          Thank you for your order. We've sent a confirmation email with your order tracking
+          details.
         </p>
         <button
           onClick={() => (window.location.href = '/')}
@@ -87,7 +97,6 @@ export const Checkout: React.FC = () => {
       </div>
     );
   }
-
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -227,7 +236,9 @@ export const Checkout: React.FC = () => {
             )}
 
             {errors.paymentMethod && (
-              <p className="mt-2 text-xs text-red-500 font-medium">{errors.paymentMethod.message}</p>
+              <p className="mt-2 text-xs text-red-500 font-medium">
+                {errors.paymentMethod.message}
+              </p>
             )}
           </div>
         </div>
@@ -247,7 +258,12 @@ export const Checkout: React.FC = () => {
                       <span className="font-semibold text-gray-800">{item.name}</span>
                       <span className="text-gray-400 text-xs block">Qty: {item.quantity}</span>
                     </div>
-                    <span className="font-bold text-gray-700">${(parseFloat(item.price.replace(/[^0-9.-]+/g, '')) * item.quantity).toFixed(2)}</span>
+                    <span className="font-bold text-gray-700">
+                      $
+                      {(parseFloat(item.price.replace(/[^0-9.-]+/g, '')) * item.quantity).toFixed(
+                        2,
+                      )}
+                    </span>
                   </div>
                 ))
               )}

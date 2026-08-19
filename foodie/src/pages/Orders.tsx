@@ -9,8 +9,9 @@ import {
   Package,
   XCircle,
 } from 'lucide-react';
-import { useOrders } from '../context/OrderContext';
-import type { OrderStatus } from '../context/OrderContext';
+import { useOrders } from '../context/useOrders';
+
+type OrderStatus = 'Placed' | 'Preparing' | 'Out for Delivery' | 'Delivered' | 'Cancelled';
 
 const getStatusBadge = (status: OrderStatus) => {
   switch (status) {

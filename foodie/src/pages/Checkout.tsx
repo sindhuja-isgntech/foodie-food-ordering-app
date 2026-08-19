@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -11,7 +11,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { Input } from '../components/ui/Input';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/useCart';
 
 const checkoutSchema = z
   .object({
@@ -57,7 +57,7 @@ export const Checkout: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutFormValues>({
@@ -67,7 +67,7 @@ export const Checkout: React.FC = () => {
     },
   });
 
-  const selectedPayment = watch('paymentMethod');
+  const selectedPayment = useWatch({ control, name: 'paymentMethod' });
 
   const onSubmit = async (data: CheckoutFormValues) => {
     // Simulate API request delay
@@ -164,18 +164,18 @@ export const Checkout: React.FC = () => {
             <h2 className="text-xl font-bold text-gray-800 mb-4">2. Payment Method</h2>
 
             <div className="grid grid-cols-3 gap-3 mb-6">
-              {[
+              {([
                 { id: 'card', name: 'Card', icon: CreditCard },
                 { id: 'upi', name: 'UPI', icon: Smartphone },
                 { id: 'cod', name: 'Cash', icon: Banknote },
-              ].map((method) => {
+              ] as const).map((method) => {
                 const Icon = method.icon;
                 const active = selectedPayment === method.id;
                 return (
                   <button
                     key={method.id}
                     type="button"
-                    onClick={() => setValue('paymentMethod', method.id as any)}
+                    onClick={() => setValue('paymentMethod', method.id)}
                     className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition ${
                       active
                         ? 'border-orange-500 bg-orange-50/50 text-orange-600'

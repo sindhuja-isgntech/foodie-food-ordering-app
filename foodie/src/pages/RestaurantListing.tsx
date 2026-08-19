@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, ArrowUpDown } from 'lucide-react';
 import { useRestaurants, useCategories } from '../hooks/useRestaurants';
 import RestaurantCard from '../components/cards/RestaurantCard';
@@ -22,12 +22,7 @@ export const RestaurantListing: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryQuery = searchParams.get('category');
 
-  // Initialize selectedCategory from URL query parameter
-  useEffect(() => {
-    if (categoryQuery) {
-      setSelectedCategory(categoryQuery);
-    }
-  }, [categoryQuery]);
+  const activeCategory = categoryQuery ?? selectedCategory;
 
   // Filter and Sort logic
   const processedRestaurants = useMemo(() => {
@@ -38,7 +33,7 @@ export const RestaurantListing: React.FC = () => {
         res.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         res.tag.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory =
-        selectedCategory === 'All' || res.tag.toLowerCase() === selectedCategory.toLowerCase();
+        activeCategory === 'All' || res.tag.toLowerCase() === activeCategory.toLowerCase();
       return matchesSearch && matchesCategory;
     });
 
@@ -49,12 +44,13 @@ export const RestaurantListing: React.FC = () => {
     }
 
     return result;
-  }, [restaurants, searchTerm, selectedCategory, sortBy]);
+  }, [restaurants, searchTerm, activeCategory, sortBy]);
 
   const handleReset = () => {
     setSearchTerm('');
     setSelectedCategory('All');
     setSortBy('default');
+    setSearchParams({});
   };
 
   const handleCategorySelect = (categoryName: string) => {
@@ -113,7 +109,7 @@ export const RestaurantListing: React.FC = () => {
                 setSearchParams(searchParams);
               }}
               className={`p-3 rounded-xl font-semibold text-sm transition ${
-                selectedCategory === 'All'
+                activeCategory === 'All'
                   ? 'bg-orange-500 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
@@ -126,7 +122,7 @@ export const RestaurantListing: React.FC = () => {
                 <CategoryCard
                   key={cat.id}
                   category={cat}
-                  isSelected={selectedCategory === cat.name}
+                  isSelected={activeCategory === cat.name}
                   onClick={() => handleCategorySelect(cat.name)}
                 />
               ))}

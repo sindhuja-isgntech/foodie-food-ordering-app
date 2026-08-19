@@ -1,30 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-export type OrderStatus = 'Placed' | 'Preparing' | 'Out for Delivery' | 'Delivered' | 'Cancelled';
-
-export interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export interface Order {
-  id: string;
-  date: string;
-  restaurantName: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: OrderStatus;
-}
-
-interface OrderContextType {
-  orders: Order[];
-  addOrder: (order: Omit<Order, 'id' | 'date' | 'status'>) => void;
-  cancelOrder: (orderId: string) => void;
-}
-
-const OrderContext = createContext<OrderContextType | undefined>(undefined);
+import React, { useState, useEffect } from 'react';
+import { OrderContext } from './order-context';
+import type { Order, OrderStatus } from './order-context';
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [orders, setOrders] = useState<Order[]>(() => {
@@ -75,10 +51,4 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {children}
     </OrderContext.Provider>
   );
-};
-
-export const useOrders = () => {
-  const context = useContext(OrderContext);
-  if (!context) throw new Error('useOrders must be used within an OrderProvider');
-  return context;
 };

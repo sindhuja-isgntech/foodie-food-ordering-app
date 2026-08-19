@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 import type { FoodItem } from '../../types/foodie';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../context/useCart';
 
 interface FoodCardProps {
   item: FoodItem;

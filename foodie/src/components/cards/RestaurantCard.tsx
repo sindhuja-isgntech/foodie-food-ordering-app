@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Clock, MapPin } from 'lucide-react';
 import type { Restaurant } from '../../types/foodie';
 import Rating from '../common/Rating';
@@ -9,14 +9,11 @@ interface RestaurantCardProps {
 }
 
 export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
-  const navigate = useNavigate();
-
   return (
-    <div
-      onClick={() => navigate(`/restaurant/${restaurant.id}`)}
-      className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between transform hover:scale-105 hover:-translate-y-1 border border-gray-100/50 group"
+    <article
+      className="bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between transform hover:scale-105 hover:-translate-y-1 border border-gray-100/50 group"
     >
-      <div>
+      <Link to={`/restaurant/${restaurant.id}`} className="block">
         <div className="relative overflow-hidden">
           <img
             src={restaurant.img}
@@ -55,8 +52,8 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) =>
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </Link>
+    </article>
   );
 };
 

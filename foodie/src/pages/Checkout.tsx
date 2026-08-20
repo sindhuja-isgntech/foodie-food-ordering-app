@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Input } from '../components/ui/Input';
 import { useCart } from '../context/useCart';
+import { useOrders } from '../context/useOrders';
 
 const checkoutSchema = z
   .object({
@@ -52,6 +53,7 @@ type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
 export const Checkout: React.FC = () => {
   const { cart, clearCart, subtotal, deliveryFee, tax, total } = useCart();
+  const { addOrder } = useOrders();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const {
@@ -73,6 +75,17 @@ export const Checkout: React.FC = () => {
     // Simulate API request delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log('Order submitted successfully:', data);
+
+    addOrder({
+      restaurantName: 'Foodie Restaurant',
+      items: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: parseFloat(item.price.replace(/[^0-9.-]+/g, '')) || 0,
+        quantity: item.quantity,
+      })),
+      totalAmount: total,
+    });
     clearCart();
     setIsSubmitted(true);
   };

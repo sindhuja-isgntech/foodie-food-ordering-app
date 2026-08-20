@@ -53,16 +53,18 @@ export const App: React.FC = () => {
             <div className="min-h-screen bg-white font-sans flex flex-col justify-between">
               <div>
                 <Navbar />
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/restaurants" element={<RestaurantListing />} />
-                  <Route path="/restaurant/:id" element={<RestaurantDetails />} />
-                  <Route path="/food/:id" element={<FoodDetails />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <main>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/restaurants" element={<RestaurantListing />} />
+                    <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+                    <Route path="/food/:id" element={<FoodDetails />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/orders" element={<Orders />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
               </div>
               <Footer />
               <CartDrawer />

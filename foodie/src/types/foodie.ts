@@ -20,6 +20,8 @@ export interface FoodItem {
   img: string;
   description: string;
   category: string;
+  isVegetarian?: boolean;
+  isAvailable?: boolean;
 }
 
 export interface Restaurant {

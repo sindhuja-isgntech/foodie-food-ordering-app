@@ -236,7 +236,7 @@ const mockRestaurantData: Record<string, Restaurant> = {
           name: 'Garlic Butter Naan',
           price: '$3.49',
           description: 'Freshly baked tandoori flatbread brushed with garlic and melted butter',
-          img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=400&q=80',
+          img: 'https://cafedelites.com/wp-content/uploads/2020/06/Garlic-Naan-Recipe-IMAGE-76.jpg',
           category: 'Breads',
         },
         {
@@ -244,7 +244,7 @@ const mockRestaurantData: Record<string, Restaurant> = {
           name: 'Gulab Jamun (2 pcs)',
           price: '$4.99',
           description: 'Warm milk-solid dumplings soaked in rose-flavored cardamom syrup',
-          img: 'https://images.unsplash.com/photo-1605197586548-06a888d051b7?auto=format&fit=crop&w=400&q=80',
+          img: 'https://as2.ftcdn.net/v2/jpg/08/94/76/25/1000_F_894762571_KXz2mTpbcjHRGMg48iiU4CnI9v7La4EN.jpg',
           category: 'Desserts',
         },
       ],
@@ -292,7 +292,7 @@ const mockRestaurantData: Record<string, Restaurant> = {
           name: 'Mango Lassi',
           price: '$3.99',
           description: 'Traditional chilled yogurt drink blended with sweet Alphonso mango pulp',
-          img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80',
+          img: 'https://tse2.mm.bing.net/th/id/OIP.NAmdO2HgT0G5qsNrhz3Q1AHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
           category: 'Drinks',
         },
       ],
@@ -375,7 +375,7 @@ export const RestaurantDetails: React.FC = () => {
         {filteredItems?.map((item) => (
           <div
             key={item.id}
-            onClick={() => navigate(`/food/${item.id}`)}
+            onClick={() => navigate(`/food/${item.id}`, { state: { food: item } })}
             className="cursor-pointer"
           >
             <FoodCard item={item} />

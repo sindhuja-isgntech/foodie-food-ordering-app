@@ -11,7 +11,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item }) => {
   const { addToCart } = useCart();
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100/50 group hover:scale-105 hover:-translate-y-1">
+    <article className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100/50 group hover:scale-105 hover:-translate-y-1">
       <div className="flex items-center gap-4 p-4">
         <div className="relative overflow-hidden rounded-xl shrink-0">
           <img
@@ -43,7 +43,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item }) => {
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

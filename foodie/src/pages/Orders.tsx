@@ -35,9 +35,9 @@ export const Orders: React.FC = () => {
 
   if (orders.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto my-16 px-4 text-center">
+      <section className="max-w-4xl mx-auto my-16 px-4 text-center" aria-labelledby="orders-heading">
         <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">No Orders Yet</h2>
+        <h1 id="orders-heading" className="text-2xl font-bold text-gray-800 mb-2">No Orders Yet</h1>
         <p className="text-gray-500 mb-6">Looks like you haven't placed any orders yet.</p>
         <a
           href="/restaurants"
@@ -45,21 +45,24 @@ export const Orders: React.FC = () => {
         >
           Explore Restaurants
         </a>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-8">Your Orders</h1>
+    <section className="max-w-5xl mx-auto px-4 py-8" aria-labelledby="orders-heading">
+      <h1 id="orders-heading" className="text-3xl font-extrabold text-gray-900 mb-8">
+        Your Orders
+      </h1>
 
-      <div className="space-y-6">
+      <ol className="space-y-6">
         {orders.map((order) => {
           const statusStyle = getStatusBadge(order.status);
           const StatusIcon = statusStyle.icon;
 
           return (
-            <div
+            <li key={order.id}>
+            <article
               key={order.id}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
             >
@@ -97,9 +100,9 @@ export const Orders: React.FC = () => {
               </div>
 
               {/* Order Items Breakdown */}
-              <div className="p-4 sm:p-6 divide-y divide-gray-100">
+              <ul className="p-4 sm:p-6 divide-y divide-gray-100">
                 {order.items.map((item) => (
-                  <div key={item.id} className="py-2.5 flex justify-between items-center text-sm">
+                  <li key={item.id} className="py-2.5 flex justify-between items-center text-sm">
                     <div className="flex items-center gap-2">
                       <span className="bg-orange-100 text-orange-700 font-bold text-xs px-2 py-0.5 rounded">
                         {item.quantity}x
@@ -109,9 +112,9 @@ export const Orders: React.FC = () => {
                     <span className="font-semibold text-gray-700">
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
               {/* Order Card Footer */}
               <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center text-sm">
@@ -120,11 +123,12 @@ export const Orders: React.FC = () => {
                   ${order.totalAmount.toFixed(2)}
                 </span>
               </div>
-            </div>
+            </article>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 };
 

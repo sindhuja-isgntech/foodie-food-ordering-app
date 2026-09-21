@@ -20,6 +20,8 @@ import NotFound from './pages/NotFound';
 import Checkout from './pages/Checkout';
 import Profile from './pages/Profile';
 import Orders from './pages/Orders';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,13 +36,13 @@ const HomePage: React.FC = () => {
   const [searchValue, setSearchValue] = React.useState('');
 
   return (
-    <>
+    <div className="home-page">
       <SearchBar value={searchValue} onChange={(value: string) => setSearchValue(value)} />
       <Categories />
       <FeaturedRestaurants searchTerm={searchValue} />
       <PopularFood searchTerm={searchValue} />
       <Offers />
-    </>
+    </div>
   );
 };
 
@@ -50,10 +52,10 @@ export const App: React.FC = () => {
       <CartProvider>
         <OrderProvider>
           <Router>
-            <div className="min-h-screen bg-white font-sans flex flex-col justify-between">
+            <div className="app-shell min-h-screen bg-[#fffaf5] font-sans flex flex-col justify-between">
               <div>
                 <Navbar />
-                <main>
+                <main className="relative z-0">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/restaurants" element={<RestaurantListing />} />
@@ -62,6 +64,8 @@ export const App: React.FC = () => {
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/orders" element={<Orders />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>

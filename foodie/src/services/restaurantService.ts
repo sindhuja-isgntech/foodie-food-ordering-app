@@ -1,4 +1,7 @@
 import type { Restaurant, Category } from '../types/foodie';
+import { fetchCategories } from './categoryService';
+import { fetchRestaurantById } from './restaurantDetailsService';
+import { fetchRestaurants } from './restaurantListService';
 
 const mockCategories: Category[] = [
   { id: 'all', name: 'All', icon: '🍽️' },
@@ -257,30 +260,17 @@ const mockRestaurants: Restaurant[] = [
   },
 ];
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const mockApi = async <T>(data: T, delay = 400): Promise<T> => {
-  await wait(delay);
-  return data;
-};
-
 // Mock API layer that mimics real backend calls without a server.
 export const restaurantService = {
   fetchCategories: async (): Promise<Category[]> => {
-    return mockApi(mockCategories, 300);
+    return fetchCategories(mockCategories);
   },
 
   fetchRestaurants: async (): Promise<Restaurant[]> => {
-    return mockApi(mockRestaurants, 600);
+    return fetchRestaurants(mockRestaurants);
   },
 
   fetchRestaurantById: async (id: number): Promise<Restaurant> => {
-    const restaurant = mockRestaurants.find((r) => r.id === id);
-
-    if (!restaurant) {
-      throw new Error(`Restaurant with ID ${id} not found.`);
-    }
-
-    return mockApi(restaurant, 500);
+    return fetchRestaurantById(mockRestaurants, id);
   },
 };

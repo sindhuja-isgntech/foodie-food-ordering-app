@@ -1,31 +1,34 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, User } from 'lucide-react';
+import { ChefHat, ShoppingBag, User } from 'lucide-react';
 import { useCart } from '../context/useCart';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const { cart = [], setIsCartOpen } = useCart();
-  const totalItems = cart.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
+  const totalItems = cart.length;
 
   // Mock authentication state (set to true to test logged-in profile view)
   const isAuthenticated = true;
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 md:h-20 md:py-0 flex flex-wrap items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-500/40 group-hover:shadow-orange-500/60 transition-all duration-300 transform group-hover:scale-110">
-            F
+        <Link to="/" className="group flex items-center gap-2.5">
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-[1.15rem] bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110 group-hover:shadow-orange-500/60">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-50/95 text-orange-600 shadow-inner">
+              <ChefHat className="h-5 w-5" strokeWidth={2.5} />
+            </span>
+            <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-amber-300 shadow-sm" />
           </div>
-          <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-orange-700 to-orange-500 bg-clip-text text-2xl font-black tracking-tight text-transparent">
             Foodie
           </span>
         </Link>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="order-3 basis-full flex items-center justify-center gap-5 pt-2 md:order-none md:basis-auto md:gap-8 md:pt-0">
           <Link
             to="/"
             className={`font-semibold text-sm transition-all duration-300 relative group ${

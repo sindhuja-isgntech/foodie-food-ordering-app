@@ -9,8 +9,9 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
   return (
-    <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-12 text-center sm:py-16">
+    <section className="home-hero relative overflow-hidden bg-gradient-to-br from-orange-100/80 via-amber-50/70 to-white/80 px-4 py-12 text-center sm:py-16">
       <div className="mx-auto max-w-6xl">
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-orange-600/80">Freshly made for you</p>
         <h1 className="mx-auto mb-4 max-w-3xl text-3xl font-extrabold text-gray-900 sm:text-4xl lg:text-5xl">
           Delicious Food Delivered To Your Doorstep
         </h1>
@@ -18,7 +19,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
           Discover the best restaurants and food options in your city.
         </p>
 
-        <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl bg-white p-2 shadow-lg md:flex-row md:p-3">
+        <div className="home-search mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-white/80 bg-white/75 p-2 shadow-xl shadow-orange-900/10 backdrop-blur-md md:flex-row md:p-3">
           <div className="flex w-full items-center gap-2 border-b border-gray-200 px-3 pb-2 md:w-1/3 md:border-b-0 md:border-r md:pb-0">
             <MapPin className="h-5 w-5 shrink-0 text-orange-500" />
             <input
@@ -43,7 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -20,11 +20,66 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  background: linear-gradient(135deg, #fffaf5 0%, #fff7ed 52%, #fef3c7 100%);
 }
 
 #root {
   min-height: 100vh;
+}
+
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 4% 18%, rgba(251, 146, 60, 0.12), transparent 23rem),
+    radial-gradient(circle at 96% 42%, rgba(245, 158, 11, 0.1), transparent 26rem),
+    linear-gradient(135deg, rgba(255, 250, 245, 0.98), rgba(255, 247, 237, 0.94));
+}
+
+.app-shell::before {
+  content: '';
+  position: absolute;
+  inset: 5rem 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(234, 88, 12, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(234, 88, 12, 0.028) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.app-shell main {
+  min-height: 28rem;
+}
+
+.home-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 32%, rgba(251, 146, 60, 0.11), transparent 24rem),
+    radial-gradient(circle at 92% 58%, rgba(245, 158, 11, 0.1), transparent 27rem);
+}
+
+.home-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(234, 88, 12, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(234, 88, 12, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+.home-hero > div {
+  animation: fadeInUp 0.7s ease-out both;
+}
+
+.home-search {
+  animation: fadeInUp 0.7s ease-out 0.15s both;
 }
 
 /* Custom Animations */

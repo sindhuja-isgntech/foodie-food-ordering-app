@@ -1,27 +1,14 @@
 import { createContext } from 'react';
+import type { Order, PlaceOrderRequest } from '../types/order';
 
-export type OrderStatus = 'Placed' | 'Preparing' | 'Out for Delivery' | 'Delivered' | 'Cancelled';
-
-export interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export interface Order {
-  id: string;
-  date: string;
-  restaurantName: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: OrderStatus;
-}
+export type { Order, OrderItem, OrderStatus } from '../types/order';
 
 export interface OrderContextType {
   orders: Order[];
-  addOrder: (order: Omit<Order, 'id' | 'date' | 'status'>) => void;
-  cancelOrder: (orderId: string) => void;
+  isLoading: boolean;
+  error: Error | null;
+  addOrder: (order: PlaceOrderRequest) => Promise<Order>;
+  cancelOrder: (orderId: number) => Promise<void>;
 }
 
 export const OrderContext = createContext<OrderContextType | undefined>(undefined);

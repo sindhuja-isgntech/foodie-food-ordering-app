@@ -13,6 +13,7 @@ import {
 import { Input } from '../components/ui/Input';
 import { useCart } from '../context/useCart';
 import { useOrders } from '../context/useOrders';
+import { getErrorMessage } from '../services/orderService';
 
 const checkoutSchema = z
   .object({
@@ -55,6 +56,7 @@ export const Checkout: React.FC = () => {
   const { cart, clearCart, subtotal, deliveryFee, tax, total } = useCart();
   const { addOrder } = useOrders();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const {
     register,
@@ -72,22 +74,23 @@ export const Checkout: React.FC = () => {
   const selectedPayment = useWatch({ control, name: 'paymentMethod' });
 
   const onSubmit = async (data: CheckoutFormValues) => {
-    // Simulate API request delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log('Order submitted successfully:', data);
-
-    addOrder({
-      restaurantName: 'Foodie Restaurant',
-      items: cart.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: parseFloat(item.price.replace(/[^0-9.-]+/g, '')) || 0,
-        quantity: item.quantity,
-      })),
-      totalAmount: total,
-    });
-    clearCart();
-    setIsSubmitted(true);
+    setSubmitError('');
+    try {
+      await addOrder({
+        items: cart.map((item) => ({
+          foodItemId: item.id,
+          name: item.name,
+          price: parseFloat(item.price.replace(/[^0-9.-]+/g, '')) || 0,
+          quantity: item.quantity,
+        })),
+        totalAmount: Number(total.toFixed(2)),
+        deliveryAddress: `${data.address}, ${data.city} ${data.zipCode}`,
+      });
+      clearCart();
+      setIsSubmitted(true);
+    } catch (error) {
+      setSubmitError(getErrorMessage(error, 'Could not place your order. Please try again.'));
+    }
   };
 
   if (isSubmitted) {
@@ -300,6 +303,12 @@ export const Checkout: React.FC = () => {
                 <span className="text-orange-600">${total.toFixed(2)}</span>
               </div>
             </div>
+
+            {submitError && (
+              <p role="alert" className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl">
+                {submitError}
+              </p>
+            )}
 
             <button
               type="submit"

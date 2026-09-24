@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Check, ShoppingBag } from 'lucide-react';
 import { Input } from '../components/ui/Input';
+import { useAuth } from '../context/AuthContext';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -17,6 +18,8 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export const Profile: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -95,7 +98,17 @@ export const Profile: React.FC = () => {
             />
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate('/login', { replace: true });
+              }}
+              className="rounded-xl border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+            >
+              Log out
+            </button>
             <button
               type="submit"
               disabled={isSubmitting}

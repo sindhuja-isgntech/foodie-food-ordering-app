@@ -1,9 +1,11 @@
 import type { Restaurant, Category } from '../types/foodie';
-import { fetchCategories } from './categoryService';
-import { fetchRestaurantById } from './restaurantDetailsService';
-import { fetchRestaurants } from './restaurantListService';
+import {
+  fetchCategories as fetchCategoriesFromApi,
+  fetchRestaurantById as fetchRestaurantByIdFromApi,
+  fetchRestaurants as fetchRestaurantsFromApi,
+} from '../api/axiosClient';
 
-const mockCategories: Category[] = [
+export const mockCategories: Category[] = [
   { id: 'all', name: 'All', icon: '🍽️' },
   { id: 'indian', name: 'Indian', icon: '🍛' },
   { id: 'fast-food', name: 'Fast Food', icon: '🍔' },
@@ -12,7 +14,7 @@ const mockCategories: Category[] = [
   { id: 'asian', name: 'Asian', icon: '🍜' },
 ];
 
-const mockRestaurants: Restaurant[] = [
+export const mockRestaurants: Restaurant[] = [
   {
     id: 1,
     name: 'The Burger Joint',
@@ -263,14 +265,14 @@ const mockRestaurants: Restaurant[] = [
 // Mock API layer that mimics real backend calls without a server.
 export const restaurantService = {
   fetchCategories: async (): Promise<Category[]> => {
-    return fetchCategories(mockCategories);
+    return fetchCategoriesFromApi();
   },
 
   fetchRestaurants: async (): Promise<Restaurant[]> => {
-    return fetchRestaurants(mockRestaurants);
+    return fetchRestaurantsFromApi();
   },
 
   fetchRestaurantById: async (id: number): Promise<Restaurant> => {
-    return fetchRestaurantById(mockRestaurants, id);
+    return fetchRestaurantByIdFromApi(id);
   },
 };

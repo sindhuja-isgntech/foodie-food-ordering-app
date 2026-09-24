@@ -1,18 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCategories } from '../hooks/useRestaurants';
+import { CUISINES } from '../constants/cuisines';
 
 export const Categories: React.FC = () => {
   const navigate = useNavigate();
   const { data: categories, isLoading } = useCategories();
 
   const handleCategoryClick = (categoryName: string) => {
-    // Navigate to restaurants listing pre-filtered by selected category
-    navigate(`/restaurants?category=${encodeURIComponent(categoryName)}`);
+    // Navigate to restaurants listing pre-filtered by the selected cuisine
+    navigate(
+      categoryName === 'All'
+        ? '/restaurants'
+        : `/restaurants?cuisine=${encodeURIComponent(categoryName)}`,
+    );
   };
 
-  // Filter out the 'All' category since it's handled separately in RestaurantListing
-  const displayCategories = categories?.filter((cat) => cat.name !== 'All') || [];
+  const displayCategories =
+    CUISINES.map(
+      (name) =>
+        categories?.find((category) => category.name === name) ?? {
+          id: name.toLowerCase(),
+          name,
+          icon: name === 'All' ? '🍽️' : undefined,
+        },
+    );
 
   if (isLoading) {
     return (
@@ -58,7 +70,11 @@ export const Categories: React.FC = () => {
               }}
             >
               <span className="text-4xl mb-3 group-hover:scale-125 transition-transform duration-300">
-                {cat.icon}
+                {cat.imageUrl ? (
+                  <img src={cat.imageUrl} alt="" className="h-10 w-10 rounded-full object-cover" />
+                ) : (
+                  cat.icon
+                )}
               </span>
               <span className="text-sm font-bold text-gray-700 group-hover:text-orange-600 transition-colors duration-300 text-center">
                 {cat.name}

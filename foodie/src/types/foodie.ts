@@ -1,7 +1,8 @@
 export interface Category {
   id: string;
   name: string;
-  icon: string;
+  icon?: string;
+  imageUrl?: string;
 }
 
 export interface Restaurant {

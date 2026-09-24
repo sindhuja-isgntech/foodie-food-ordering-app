@@ -1,157 +1,147 @@
-import React, { useState, useMemo } from 'react';
-import { Search, ArrowUpDown } from 'lucide-react';
-import { useRestaurants, useCategories } from '../hooks/useRestaurants';
-import RestaurantCard from '../components/cards/RestaurantCard';
-import CategoryCard from '../components/cards/CategoryCard';
-import Loader from '../components/common/Loader';
-import EmptyState from '../components/common/EmptyState';
-import ErrorState from '../components/common/ErrorState';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Star, Clock } from 'lucide-react';
+import { fetchRestaurants, fetchCategories } from '../api/axiosClient';
+import { CUISINES } from '../constants/cuisines';
 
-type SortOption = 'default' | 'rating-desc' | 'name-asc';
+type Restaurant = {
+  id: string | number;
+  img: string;
+  name: string;
+  rating: number;
+  time: string;
+  tag: string;
+};
 
-export const RestaurantListing: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [sortBy, setSortBy] = useState<SortOption>('default');
+type Category = {
+  id: string | number;
+  imageUrl: string;
+  name: string;
+};
 
-  // TanStack Query hooks
-  const { data: categories, isLoading: isLoadingCategories } = useCategories();
-  const { data: restaurants, isLoading, isError, error, refetch } = useRestaurants();
+export default function RestaurantsPage() {
+  const [searchTerm, setSearchTerm] = useState('');
 
+  // The cuisine filter lives in the URL so the home page category tiles can
+  // deep-link into this page already filtered.
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryQuery = searchParams.get('category');
+  const selectedCuisine = searchParams.get('cuisine') ?? '';
 
-  const activeCategory = categoryQuery ?? selectedCategory;
-
-  // Filter and Sort logic
-  const processedRestaurants = useMemo(() => {
-    if (!restaurants) return [];
-
-    let result = restaurants.filter((res) => {
-      const matchesSearch =
-        res.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        res.tag.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        activeCategory === 'All' || res.tag.toLowerCase() === activeCategory.toLowerCase();
-      return matchesSearch && matchesCategory;
-    });
-
-    if (sortBy === 'rating-desc') {
-      result = [...result].sort((a, b) => b.rating - a.rating);
-    } else if (sortBy === 'name-asc') {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    return result;
-  }, [restaurants, searchTerm, activeCategory, sortBy]);
-
-  const handleReset = () => {
-    setSearchTerm('');
-    setSelectedCategory('All');
-    setSortBy('default');
-    setSearchParams({});
-  };
-
-  const handleCategorySelect = (categoryName: string) => {
-    setSelectedCategory(categoryName);
-    if (categoryName === 'All') {
-      searchParams.delete('category');
+  const handleCuisineChange = (cuisine: string) => {
+    const nextParams = new URLSearchParams(searchParams);
+    if (cuisine) {
+      nextParams.set('cuisine', cuisine);
     } else {
-      searchParams.set('category', categoryName);
+      nextParams.delete('cuisine');
     }
-    setSearchParams(searchParams);
+    setSearchParams(nextParams, { replace: true });
   };
+
+  // Fetch Restaurants using TanStack Query
+  const {
+    data: restaurants = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery<Restaurant[]>({
+    queryKey: ['restaurants', searchTerm, selectedCuisine],
+    queryFn: () => fetchRestaurants(searchTerm, selectedCuisine),
+  });
+
+  // Fetch Categories
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Search & Sort Controls */}
+      {/* Search & Filter Header */}
+      <div className="flex flex-col md:flex-row gap-4 justify-between mb-8">
+        <input
+          type="text"
+          placeholder="Search restaurants by name..."
+          className="border p-2 rounded-md w-full md:w-1/3"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <select
+          className="border p-2 rounded-md"
+          value={selectedCuisine}
+          onChange={(e) => handleCuisineChange(e.target.value)}
+        >
+          <option value="">All Cuisines</option>
+          {CUISINES.filter((cuisine) => cuisine !== 'All').map((cuisine) => (
+            <option key={cuisine} value={cuisine}>
+              {cuisine}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Categories */}
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Explore Restaurants</h1>
-        <p className="text-gray-500 mb-6">Find top-rated spots and delicious meals near you.</p>
+        <h2 className="text-xl font-bold mb-4">Categories</h2>
+        <div className="flex gap-4 overflow-x-auto pb-1">
+          {CUISINES.map((name) => {
+            const cuisineValue = name === 'All' ? '' : name;
+            const isActive = selectedCuisine === cuisineValue;
+            const imageUrl = categories.find((category) => category.name === name)?.imageUrl;
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full sm:max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search restaurants or cuisines..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-            <ArrowUpDown className="w-4 h-4 text-gray-500" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-orange-500/20 w-full sm:w-auto font-medium"
-            >
-              <option value="default">Sort by: Default</option>
-              <option value="rating-desc">Highest Rated</option>
-              <option value="name-asc">Name (A-Z)</option>
-            </select>
-          </div>
+            return (
+              <button
+                key={name}
+                type="button"
+                onClick={() => handleCuisineChange(cuisineValue)}
+                aria-pressed={isActive}
+                className={`shrink-0 border p-3 rounded-lg flex items-center gap-2 min-w-[120px] transition ${
+                  isActive
+                    ? 'border-orange-500 bg-orange-50 text-orange-600 shadow-sm'
+                    : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50/50'
+                }`}
+              >
+                {imageUrl && (
+                  <img src={imageUrl} alt="" className="w-8 h-8 rounded-full object-cover" />
+                )}
+                <span className="font-medium text-sm">{name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Categories Filter */}
-      {!isLoadingCategories && categories && (
-        <div className="mb-8">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Cuisines</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-            <button
-              onClick={() => {
-                setSelectedCategory('All');
-                searchParams.delete('category');
-                setSearchParams(searchParams);
-              }}
-              className={`p-3 rounded-xl font-semibold text-sm transition ${
-                activeCategory === 'All'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              All Cuisines
-            </button>
-            {categories
-              .filter((cat) => cat.name !== 'All')
-              .map((cat) => (
-                <CategoryCard
-                  key={cat.id}
-                  category={cat}
-                  isSelected={activeCategory === cat.name}
-                  onClick={() => handleCategorySelect(cat.name)}
-                />
-              ))}
-          </div>
-        </div>
-      )}
+      {/* Loading & Error States */}
+      {isLoading && <p className="text-gray-500">Loading restaurants from backend...</p>}
+      {isError && <p className="text-red-500">Failed to load data: {error.message}</p>}
 
-      {/* State Management Displays */}
-      {isLoading ? (
-        <Loader />
-      ) : isError ? (
-        <ErrorState message={error?.message} onRetry={() => refetch()} />
-      ) : processedRestaurants.length === 0 ? (
-        <EmptyState onReset={handleReset} />
-      ) : (
-        <div>
-          <p className="text-sm text-gray-500 mb-4 font-medium">
-            Showing {processedRestaurants.length} restaurant
-            {processedRestaurants.length > 1 ? 's' : ''}
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {processedRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Restaurant Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {restaurants.map((restaurant) => (
+          <Link
+            key={restaurant.id}
+            to={`/restaurant/${restaurant.id}`}
+            className="block overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
+          >
+            <img src={restaurant.img} alt={restaurant.name} className="h-48 w-full object-cover" />
+            <div className="p-4">
+              <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-600">
+                {restaurant.tag}
+              </span>
+              <h3 className="mt-2 text-xl font-bold text-gray-800">{restaurant.name}</h3>
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1 font-semibold text-amber-500">
+                  <Star className="h-4 w-4 fill-amber-400" /> {restaurant.rating}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="h-4 w-4" /> {restaurant.time}
+                </span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
-};
-
-export default RestaurantListing;
+}

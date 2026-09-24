@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, Clock, MapPin, ArrowLeft } from 'lucide-react';
 import FoodCard from '../components/cards/FoodCard';
 import type { Restaurant } from '../types/foodie';
+import { useRestaurantDetails } from '../hooks/useRestaurants';
 
 // Dynamic mock data for all 4 restaurants
 const mockRestaurantData: Record<string, Restaurant> = {
@@ -304,10 +305,11 @@ export const RestaurantDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const restaurantId = Number(id);
+  const { data: backendRestaurant } = useRestaurantDetails(restaurantId);
 
   // Fallback to restaurant 1 if id not found
-  const restaurant =
-    id && mockRestaurantData[id] ? mockRestaurantData[id] : mockRestaurantData['1'];
+  const restaurant = backendRestaurant ?? (id && mockRestaurantData[id] ? mockRestaurantData[id] : mockRestaurantData['1']);
   const menu = restaurant.menu;
 
   const filteredItems = menu?.items.filter(

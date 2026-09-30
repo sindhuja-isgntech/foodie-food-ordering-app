@@ -21,9 +21,8 @@ const ADMIN_LINKS = [
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { cart = [], setIsCartOpen } = useCart();
+  const { totalItemsCount: totalItems, setIsCartOpen } = useCart();
   const { isAuthenticated, isAdmin, logout } = useAuth();
-  const totalItems = cart.length;
 
   const links = isAdmin ? ADMIN_LINKS : CUSTOMER_LINKS;
 
@@ -34,7 +33,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 md:h-20 md:py-0 flex flex-wrap items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 md:h-20 md:py-0 flex flex-wrap items-center justify-between gap-y-2">
         {/* Logo */}
         <Link to={isAdmin ? '/admin' : '/'} className="group flex items-center gap-2.5">
           <div className="relative flex h-11 w-11 items-center justify-center rounded-[1.15rem] bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110 group-hover:shadow-orange-500/60">
@@ -55,7 +54,7 @@ export const Navbar: React.FC = () => {
         </Link>
 
         {/* Navigation Links */}
-        <nav className="order-3 basis-full flex flex-wrap items-center justify-center gap-x-5 gap-y-2 pt-2 md:order-none md:basis-auto md:gap-8 md:pt-0">
+        <nav className="order-3 basis-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-1 sm:gap-x-5 sm:pt-2 md:order-none md:basis-auto md:gap-8 md:pt-0">
           {links.map(({ to, label }) => {
             const active = location.pathname === to;
             return (
@@ -77,7 +76,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {isAdmin ? (
             <button
               type="button"
@@ -94,7 +93,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-2.5 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-full transition-all duration-300 group"
-                aria-label="Shopping Cart"
+                aria-label={totalItems > 0 ? `Shopping Cart, ${totalItems} items` : 'Shopping Cart'}
               >
                 <ShoppingBag className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                 {totalItems > 0 && (
@@ -108,7 +107,7 @@ export const Navbar: React.FC = () => {
               {isAuthenticated ? (
                 <Link
                   to="/profile"
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all duration-300 transform hover:scale-105 ${
+                  className={`flex items-center gap-2 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-full border transition-all duration-300 transform hover:scale-105 ${
                     location.pathname === '/profile'
                       ? 'border-orange-500 bg-gradient-to-r from-orange-50 to-orange-100 text-orange-600 shadow-lg shadow-orange-500/20'
                       : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50 text-gray-700'
@@ -122,7 +121,7 @@ export const Navbar: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm rounded-full shadow-lg shadow-orange-500/30 transition-all duration-300 transform hover:scale-105"
+                  className="px-4 py-2.5 sm:px-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm rounded-full shadow-lg shadow-orange-500/30 transition-all duration-300 transform hover:scale-105"
                 >
                   Sign In
                 </Link>

@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   login: (userData: AuthResponse) => void;
   logout: () => void;
+  updateUser: (changes: Partial<Pick<User, 'name' | 'mobile'>>) => void;
   isAdmin: boolean;
   isCustomer: boolean;
   isAuthenticated: boolean;
@@ -33,12 +34,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     clearStoredUser();
   };
 
+  // Keep the stored session in sync after the user edits their profile
+  const updateUser = (changes: Partial<Pick<User, 'name' | 'mobile'>>) => {
+    if (!user) return;
+    const updated = { ...user, ...changes };
+    setUser(updated);
+    saveStoredUser(updated);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         login,
         logout,
+        updateUser,
         isAdmin: user?.role === 'ADMIN',
         isCustomer: user?.role === 'CUSTOMER',
         isAuthenticated: user !== null,

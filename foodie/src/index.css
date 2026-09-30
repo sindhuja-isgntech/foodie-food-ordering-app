@@ -14,17 +14,38 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
 }
 
 body {
   margin: 0;
-  min-width: 320px;
+  width: 100%;
   min-height: 100vh;
   background: linear-gradient(135deg, #fffaf5 0%, #fff7ed 52%, #fef3c7 100%);
 }
 
 #root {
+  width: 100%;
   min-height: 100vh;
+}
+
+#root main {
+  min-width: 0;
+}
+
+#root img {
+  max-width: 100%;
+}
+
+#root :where(input, select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  #root :where(input, select, textarea) {
+    font-size: 16px;
+  }
 }
 
 .app-shell {

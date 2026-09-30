@@ -8,7 +8,7 @@ export const Offers: React.FC = () => {
           <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
             Special Promo
           </span>
-          <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">Get 50% Off Your First Order</h2>
+          <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl md:text-4xl">Get 50% Off Your First Order</h2>
           <p className="mt-2 text-orange-100">
             Use promo code <span className="font-bold text-white">FOODIE50</span> at checkout.
           </p>

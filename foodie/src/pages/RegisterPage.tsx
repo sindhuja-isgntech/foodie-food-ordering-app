@@ -37,8 +37,8 @@ export default function RegisterPage(): React.JSX.Element {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md border">
+    <div className="min-h-[60vh] w-full flex items-center justify-center bg-gray-50 px-3 py-8 sm:p-4">
+      <div className="max-w-md w-full bg-white p-5 sm:p-8 rounded-lg shadow-md border">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create your Account</h2>
 
         {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}

@@ -6,6 +6,7 @@ import type { Role } from './types/auth';
 import { CartProvider } from './context/CartContext';
 import { OrderProvider } from './context/OrderContext';
 import Navbar from './components/Navbar';
+import CartDrawer from './components/cart/CartDrawer';
 import Footer from './components/Footer';
 import SearchBar from './components/Searchbar';
 import Categories from './components/Categories';
@@ -15,12 +16,15 @@ import Offers from './components/Offers';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import RestaurantsPage from './pages/RestaurantListing';
 import RestaurantDetails from './pages/RestaurantDetails';
 import FoodDetails from './pages/FoodDetails';
 import Checkout from './pages/Checkout';
 import Profile from './pages/Profile';
 import Orders from './pages/Orders';
+import NotFound from './pages/NotFound';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRestaurants from './pages/admin/ManageRestaurants';
 import ManageCategories from './pages/admin/ManageCategories';
@@ -61,11 +65,6 @@ const ProtectedRoute = ({ requiredRole }: { requiredRole?: Role }) => {
   return <Outlet />;
 };
 
-const FallbackRedirect = () => {
-  const { user } = useAuth();
-  return <Navigate to={homePathFor(user?.role)} replace />;
-};
-
 export default function App(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
@@ -73,15 +72,17 @@ export default function App(): React.JSX.Element {
         <CartProvider>
           <OrderProvider>
             <BrowserRouter>
-              <div className="min-h-screen bg-white font-sans flex flex-col justify-between">
-                <div>
+              <div className="min-h-dvh w-full bg-white font-sans flex flex-col">
+                <div className="min-w-0 flex-1">
                   <Navbar />
-                  <main>
+                  <main className="min-w-0">
                     <Routes>
             {/* Public Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/restaurants" element={<RestaurantsPage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
 
             {/* Customers return to the home page after authentication. */}
             <Route element={<ProtectedRoute requiredRole="CUSTOMER" />}>
@@ -103,12 +104,13 @@ export default function App(): React.JSX.Element {
               <Route path="/admin/orders" element={<ManageOrders />} />
             </Route>
 
-            <Route path="*" element={<FallbackRedirect />} />
+            <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
                 </div>
                 <Footer />
               </div>
+              <CartDrawer />
             </BrowserRouter>
           </OrderProvider>
         </CartProvider>

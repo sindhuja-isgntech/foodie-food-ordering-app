@@ -115,14 +115,14 @@ export const Checkout: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-8">Checkout</h1>
+    <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6 sm:mb-8">Checkout</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-12 gap-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-12 gap-5 sm:gap-8">
         {/* Left Column - Forms */}
         <div className="lg:col-span-7 flex flex-col gap-8">
           {/* Shipping Address Section */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h2 className="text-xl font-bold text-gray-800 mb-4">1. Delivery Address</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <Input
@@ -176,7 +176,7 @@ export const Checkout: React.FC = () => {
           </div>
 
           {/* Payment Method Section */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h2 className="text-xl font-bold text-gray-800 mb-4">2. Payment Method</h2>
 
             <div className="grid grid-cols-3 gap-3 mb-6">
@@ -261,7 +261,7 @@ export const Checkout: React.FC = () => {
 
         {/* Right Column - Summary */}
         <div className="lg:col-span-5">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm sticky top-6">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm lg:sticky lg:top-24">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
 
             <div className="divide-y divide-gray-100 max-h-64 overflow-y-auto mb-4">
@@ -269,12 +269,12 @@ export const Checkout: React.FC = () => {
                 <p className="py-4 text-sm text-gray-400 text-center">Your cart is empty.</p>
               ) : (
                 cart.map((item) => (
-                  <div key={item.id} className="py-3 flex justify-between items-center text-sm">
-                    <div>
+                  <div key={item.cartKey} className="py-3 flex justify-between items-center gap-3 text-sm">
+                    <div className="min-w-0">
                       <span className="font-semibold text-gray-800">{item.name}</span>
                       <span className="text-gray-400 text-xs block">Qty: {item.quantity}</span>
                     </div>
-                    <span className="font-bold text-gray-700">
+                    <span className="shrink-0 font-bold text-gray-700">
                       $
                       {(parseFloat(item.price.replace(/[^0-9.-]+/g, '')) * item.quantity).toFixed(
                         2,

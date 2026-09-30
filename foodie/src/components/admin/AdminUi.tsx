@@ -140,7 +140,7 @@ export const AdminTable: React.FC<{ headers: string[]; children: React.ReactNode
   children,
 }) => (
   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
-    <table className="w-full text-sm text-left">
+    <table className="w-full min-w-[40rem] text-sm text-left">
       <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
         <tr>
           {headers.map((header) => (

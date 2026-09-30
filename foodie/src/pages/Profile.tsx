@@ -3,44 +3,164 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, ShoppingBag } from 'lucide-react';
 import { Input } from '../components/ui/Input';
+import Loader from '../components/common/Loader';
+import ErrorState from '../components/common/ErrorState';
 import { useAuth } from '../context/AuthContext';
+import { fetchMyProfile, updateMyProfile } from '../services/profileService';
+import type { UserProfile } from '../services/profileService';
+import { getErrorMessage } from '../services/orderService';
+
+const PROFILE_KEY = ['profile'];
 
 const profileSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
+  name: z.string().trim().min(2, 'Name must be at least 2 characters'),
   phone: z.string().regex(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
-  address: z.string().min(5, 'Address must be at least 5 characters'),
+  address: z
+    .string()
+    .trim()
+    .refine((value) => value === '' || value.length >= 5, 'Address must be at least 5 characters'),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-export const Profile: React.FC = () => {
+const getInitials = (name: string) =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+
+interface ProfileFormProps {
+  profile: UserProfile;
+  onLogout: () => void;
+}
+
+const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onLogout }) => {
+  const queryClient = useQueryClient();
+  const { updateUser } = useAuth();
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+  const [saveError, setSaveError] = useState('');
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: 'Alex Johnson',
-      email: 'alex.johnson@example.com',
-      phone: '9876543210',
-      address: '742 Evergreen Terrace, Springfield',
+      name: profile.name,
+      phone: profile.mobile,
+      address: profile.defaultAddress ?? '',
     },
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Profile updated:', data);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 4000);
+    setSaveError('');
+    try {
+      const updated = await updateMyProfile({
+        name: data.name,
+        mobile: data.phone,
+        defaultAddress: data.address || null,
+      });
+      queryClient.setQueryData(PROFILE_KEY, updated);
+      updateUser({ name: updated.name, mobile: updated.mobile });
+      reset({ name: updated.name, phone: updated.mobile, address: updated.defaultAddress ?? '' });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 4000);
+    } catch (error) {
+      setSaveError(getErrorMessage(error, 'Could not save your profile. Please try again.'));
+    }
   };
+
+  return (
+    <>
+      {saveSuccess && (
+        <div
+          role="status"
+          className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl flex items-center gap-2"
+        >
+          <Check className="w-5 h-5" /> Profile updated successfully!
+        </div>
+      )}
+      {saveError && (
+        <p
+          role="alert"
+          className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl"
+        >
+          {saveError}
+        </p>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          <Input label="Full Name" {...register('name')} error={errors.name?.message} />
+          {/* Email is the login identity, so it can't be changed here */}
+          <Input
+            label="Email Address"
+            type="email"
+            value={profile.email}
+            readOnly
+            aria-readonly="true"
+            className="text-gray-500 cursor-not-allowed"
+          />
+          <Input
+            label="Phone Number"
+            inputMode="numeric"
+            maxLength={10}
+            {...register('phone')}
+            error={errors.phone?.message}
+          />
+          <Input
+            label="Default Address"
+            placeholder="Add a delivery address"
+            {...register('address')}
+            error={errors.address?.message}
+          />
+        </div>
+
+        <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-xl border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+          >
+            Log out
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting || !isDirty}
+            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition shadow-md disabled:bg-gray-300"
+          >
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
+    </>
+  );
+};
+
+export const Profile: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    data: profile,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({ queryKey: PROFILE_KEY, queryFn: fetchMyProfile });
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
+
+  const displayName = profile?.name ?? user?.name ?? '';
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -64,60 +184,32 @@ export const Profile: React.FC = () => {
 
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8">
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-extrabold text-2xl">
-            AJ
+          <div
+            aria-hidden="true"
+            className="w-16 h-16 shrink-0 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-extrabold text-2xl"
+          >
+            {getInitials(displayName) || '?'}
           </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-gray-900">User Profile</h1>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-extrabold text-gray-900 truncate">
+              {displayName || 'User Profile'}
+            </h1>
             <p className="text-sm text-gray-500">
               Manage your personal information and delivery preferences
             </p>
           </div>
         </div>
 
-        {saveSuccess && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl flex items-center gap-2">
-            <Check className="w-5 h-5" /> Profile updated successfully!
-          </div>
+        {isLoading ? (
+          <Loader />
+        ) : error || !profile ? (
+          <ErrorState
+            message={getErrorMessage(error, 'Could not load your profile.')}
+            onRetry={() => refetch()}
+          />
+        ) : (
+          <ProfileForm key={profile.id} profile={profile} onLogout={handleLogout} />
         )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Input label="Full Name" {...register('name')} error={errors.name?.message} />
-            <Input
-              label="Email Address"
-              type="email"
-              {...register('email')}
-              error={errors.email?.message}
-            />
-            <Input label="Phone Number" {...register('phone')} error={errors.phone?.message} />
-            <Input
-              label="Default Address"
-              {...register('address')}
-              error={errors.address?.message}
-            />
-          </div>
-
-          <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              onClick={() => {
-                logout();
-                navigate('/login', { replace: true });
-              }}
-              className="rounded-xl border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
-            >
-              Log out
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition shadow-md disabled:bg-gray-300"
-            >
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );

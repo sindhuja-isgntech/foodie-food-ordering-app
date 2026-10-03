@@ -82,7 +82,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onLogout }) => {
       {saveSuccess && (
         <div
           role="status"
-          className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl flex items-center gap-2"
+          className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl flex items-center gap-2"
         >
           <Check className="w-5 h-5" /> Profile updated successfully!
         </div>
@@ -106,7 +106,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onLogout }) => {
             value={profile.email}
             readOnly
             aria-readonly="true"
-            className="text-gray-500 cursor-not-allowed"
+            className="text-stone-500 cursor-not-allowed"
           />
           <Input
             label="Phone Number"
@@ -127,14 +127,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onLogout }) => {
           <button
             type="button"
             onClick={onLogout}
-            className="rounded-xl border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+            className="rounded-xl border border-stone-300 px-6 py-3 font-bold text-stone-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600"
           >
             Log out
           </button>
           <button
             type="submit"
             disabled={isSubmitting || !isDirty}
-            className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition shadow-md disabled:bg-gray-300"
+            className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl transition shadow-md disabled:bg-stone-300"
           >
             {isSubmitting ? 'Saving...' : 'Save Changes'}
           </button>
@@ -168,21 +168,21 @@ export const Profile: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Link
           to="/orders"
-          className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-2xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+          className="rounded-xl border border-stone-200/80 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md"
         >
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white">
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange-50 text-orange-700">
               <ShoppingBag className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900">My Orders</h3>
-              <p className="text-sm text-gray-600">Track your orders</p>
+              <h3 className="font-bold text-stone-900">My Orders</h3>
+              <p className="text-sm text-stone-600">Track your orders</p>
             </div>
           </div>
         </Link>
       </div>
 
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8">
+      <div className="rounded-xl border border-stone-200/80 bg-white p-5 shadow-sm md:p-8">
         <div className="flex items-center gap-4 mb-8">
           <div
             aria-hidden="true"
@@ -191,10 +191,10 @@ export const Profile: React.FC = () => {
             {getInitials(displayName) || '?'}
           </div>
           <div className="min-w-0">
-            <h1 className="text-2xl font-extrabold text-gray-900 truncate">
+            <h1 className="text-2xl font-extrabold text-stone-900 truncate">
               {displayName || 'User Profile'}
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-stone-500">
               Manage your personal information and delivery preferences
             </p>
           </div>

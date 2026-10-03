@@ -6,21 +6,15 @@ import ErrorState from '../../components/common/ErrorState';
 import { AdminPageHeader, ErrorBanner } from '../../components/admin/AdminUi';
 import { adminApi, adminKeys } from '../../services/adminService';
 import { getErrorMessage } from '../../services/orderService';
+import { useFeedback } from '../../context/useFeedback';
 import {
   ORDER_STATUSES,
   ORDER_STATUS_LABELS,
+  ORDER_STATUS_STYLES as STATUS_STYLES,
   formatOrderId,
   isFinalStatus,
 } from '../../types/order';
 import type { Order, OrderStatus } from '../../types/order';
-
-const STATUS_STYLES: Record<OrderStatus, string> = {
-  PLACED: 'bg-blue-50 text-blue-700 border-blue-200',
-  PREPARING: 'bg-amber-50 text-amber-700 border-amber-200',
-  OUT_FOR_DELIVERY: 'bg-purple-50 text-purple-700 border-purple-200',
-  DELIVERED: 'bg-green-50 text-green-700 border-green-200',
-  CANCELLED: 'bg-red-50 text-red-700 border-red-200',
-};
 
 type StatusFilter = OrderStatus | 'ALL' | 'ACTIVE';
 
@@ -36,10 +30,16 @@ const matchesFilter = (order: Order, filter: StatusFilter) =>
 
 export const ManageOrders: React.FC = () => {
   const queryClient = useQueryClient();
+  const { showToast, confirm } = useFeedback();
   const [filter, setFilter] = useState<StatusFilter>('ACTIVE');
   const [actionError, setActionError] = useState('');
 
-  const { data: orders = [], isLoading, error, refetch } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: adminKeys.orders,
     queryFn: adminApi.fetchOrders,
     // Keep the board fresh as customers place orders
@@ -49,15 +49,26 @@ export const ManageOrders: React.FC = () => {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: OrderStatus }) =>
       adminApi.updateOrderStatus(id, status),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.orders }),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: adminKeys.orders });
+      showToast({
+        title: `${formatOrderId(updated.id)} updated`,
+        description: `Status changed to ${ORDER_STATUS_LABELS[updated.status]}.`,
+      });
+    },
     onError: (err) => setActionError(getErrorMessage(err, 'Could not update order status.')),
   });
 
-  const handleStatusChange = (order: Order, status: OrderStatus) => {
+  const handleStatusChange = async (order: Order, status: OrderStatus) => {
     if (status === order.status) return;
     if (
       status === 'CANCELLED' &&
-      !window.confirm(`Cancel ${formatOrderId(order.id)}? This cannot be undone.`)
+      !(await confirm({
+        title: `Cancel ${formatOrderId(order.id)}?`,
+        message: `${order.customerName}'s order will be cancelled. This cannot be undone.`,
+        confirmLabel: 'Cancel order',
+        cancelLabel: 'Keep order',
+      }))
     ) {
       return;
     }
@@ -86,8 +97,8 @@ export const ManageOrders: React.FC = () => {
               onClick={() => setFilter(value)}
               className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
                 active
-                  ? 'bg-orange-500 border-orange-500 text-white shadow-md'
-                  : 'bg-white border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-600'
+                  ? 'border-orange-600 bg-orange-600 text-white shadow-sm'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:text-orange-700'
               }`}
             >
               {label} <span className={active ? 'text-orange-100' : 'text-gray-400'}>{count}</span>
@@ -115,7 +126,7 @@ export const ManageOrders: React.FC = () => {
             return (
               <li
                 key={order.id}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+                className="overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-sm"
               >
                 <div className="p-4 sm:p-5 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 bg-gray-50/50">
                   <div className="space-y-1">
@@ -155,7 +166,7 @@ export const ManageOrders: React.FC = () => {
                       value={order.status}
                       disabled={final || isUpdating}
                       onChange={(e) => handleStatusChange(order, e.target.value as OrderStatus)}
-                      className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+                      className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/15 disabled:bg-gray-100 disabled:text-gray-500"
                     >
                       {ORDER_STATUSES.map((status) => (
                         <option key={status} value={status}>
@@ -169,7 +180,10 @@ export const ManageOrders: React.FC = () => {
 
                 <ul className="px-4 sm:px-5 py-3 divide-y divide-gray-100 text-sm">
                   {order.items.map((item, index) => (
-                    <li key={`${item.foodItemId}-${index}`} className="py-2 flex justify-between gap-4">
+                    <li
+                      key={`${item.foodItemId}-${index}`}
+                      className="py-2 flex justify-between gap-4"
+                    >
                       <span className="text-gray-800">
                         <span className="font-bold text-orange-600">{item.quantity}x</span>{' '}
                         {item.name}

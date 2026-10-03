@@ -8,6 +8,7 @@ import Loader from '../../components/common/Loader';
 import ErrorState from '../../components/common/ErrorState';
 import {
   AdminPageHeader,
+  AdminPagination,
   AdminTable,
   CheckboxField,
   EmptyRow,
@@ -19,6 +20,7 @@ import { emptyToNull, toNullableNumber } from '../../components/admin/formUtils'
 import { adminApi, adminKeys } from '../../services/adminService';
 import type { AdminRestaurant, RestaurantInput } from '../../services/adminService';
 import { getErrorMessage } from '../../services/orderService';
+import { useFeedback } from '../../context/useFeedback';
 
 const restaurantSchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters'),
@@ -111,17 +113,27 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({
 
 export const ManageRestaurants: React.FC = () => {
   const queryClient = useQueryClient();
+  const { showToast, confirm } = useFeedback();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   // undefined = form closed, null = adding a new restaurant
   const [editing, setEditing] = useState<AdminRestaurant | null | undefined>(undefined);
   const [actionError, setActionError] = useState('');
 
-  const { data: restaurants = [], isLoading, error, refetch } = useQuery({
-    queryKey: adminKeys.restaurants,
-    queryFn: adminApi.fetchRestaurants,
+  const {
+    data: restaurantPage,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: [...adminKeys.restaurants, page, pageSize],
+    queryFn: () => adminApi.fetchRestaurants(page, pageSize),
   });
+  const restaurants = restaurantPage?.content ?? [];
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: adminKeys.restaurants });
+    queryClient.invalidateQueries({ queryKey: adminKeys.restaurantOptions });
     queryClient.invalidateQueries({ queryKey: adminKeys.publicRestaurants });
     queryClient.invalidateQueries({ queryKey: adminKeys.foods });
   };
@@ -129,15 +141,23 @@ export const ManageRestaurants: React.FC = () => {
   const saveMutation = useMutation({
     mutationFn: (input: RestaurantInput) =>
       editing ? adminApi.updateRestaurant(editing.id, input) : adminApi.createRestaurant(input),
-    onSuccess: () => {
+    onSuccess: (saved) => {
       refresh();
+      showToast({
+        title: editing ? 'Restaurant updated successfully' : 'Restaurant added successfully',
+        description: `"${saved.name}" has been saved.`,
+      });
       setEditing(undefined);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: adminApi.deleteRestaurant,
-    onSuccess: refresh,
+    mutationFn: (item: AdminRestaurant) => adminApi.deleteRestaurant(item.id),
+    onSuccess: (_result, item) => {
+      showToast({ title: 'Restaurant deleted', description: `"${item.name}" has been removed.` });
+      if (page > 0 && restaurantPage?.content.length === 1) setPage(page - 1);
+      refresh();
+    },
     onError: (err) => setActionError(getErrorMessage(err, 'Could not delete restaurant.')),
   });
 
@@ -146,12 +166,15 @@ export const ManageRestaurants: React.FC = () => {
     setEditing(restaurant);
   };
 
-  const handleDelete = (restaurant: AdminRestaurant) => {
-    if (
-      window.confirm(`Delete "${restaurant.name}"? All of its food items will be deleted too.`)
-    ) {
+  const handleDelete = async (item: AdminRestaurant) => {
+    const confirmed = await confirm({
+      title: 'Delete restaurant?',
+      message: `"${item.name}" and all of its food items will be permanently deleted. This cannot be undone.`,
+      confirmLabel: 'Delete restaurant',
+    });
+    if (confirmed) {
       setActionError('');
-      deleteMutation.mutate(restaurant.id);
+      deleteMutation.mutate(item);
     }
   };
 
@@ -186,57 +209,71 @@ export const ManageRestaurants: React.FC = () => {
       ) : error ? (
         <ErrorState message={getErrorMessage(error, error.message)} onRetry={() => refetch()} />
       ) : (
-        <AdminTable headers={['Restaurant', 'Cuisine', 'Rating', 'Delivery', 'Status', '']}>
-          {restaurants.length === 0 ? (
-            <EmptyRow colSpan={6} message="No restaurants yet." />
-          ) : (
-            restaurants.map((restaurant) => (
-              <tr key={restaurant.id} className="hover:bg-gray-50/60">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {restaurant.imageUrl ? (
-                      <img
-                        src={restaurant.imageUrl}
-                        alt=""
-                        className="w-10 h-10 rounded-lg object-cover bg-gray-100"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-orange-50" />
-                    )}
-                    <div>
-                      <p className="font-bold text-gray-900">{restaurant.name}</p>
-                      <p className="text-xs text-gray-500">{restaurant.location ?? '—'}</p>
+        <>
+          <AdminTable headers={['Restaurant', 'Cuisine', 'Rating', 'Delivery', 'Status', '']}>
+            {restaurants.length === 0 ? (
+              <EmptyRow colSpan={6} message="No restaurants yet." />
+            ) : (
+              restaurants.map((restaurant) => (
+                <tr key={restaurant.id} className="hover:bg-gray-50/60">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      {restaurant.imageUrl ? (
+                        <img
+                          src={restaurant.imageUrl}
+                          alt=""
+                          className="w-10 h-10 rounded-lg object-cover bg-gray-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-orange-50" />
+                      )}
+                      <div>
+                        <p className="font-bold text-gray-900">{restaurant.name}</p>
+                        <p className="text-xs text-gray-500">{restaurant.location ?? '—'}</p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-gray-700">{restaurant.cuisine}</td>
-                <td className="px-4 py-3 text-gray-700">{restaurant.rating ?? '—'}</td>
-                <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
-                  {restaurant.deliveryTime ?? '—'}
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                      restaurant.isOpen === false
-                        ? 'bg-gray-100 text-gray-600'
-                        : 'bg-green-50 text-green-700'
-                    }`}
-                  >
-                    {restaurant.isOpen === false ? 'Closed' : 'Open'}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <RowActions
-                    itemName={restaurant.name}
-                    onEdit={() => openForm(restaurant)}
-                    onDelete={() => handleDelete(restaurant)}
-                    isDeleting={deleteMutation.isPending}
-                  />
-                </td>
-              </tr>
-            ))
-          )}
-        </AdminTable>
+                  </td>
+                  <td className="px-4 py-3 text-gray-700">{restaurant.cuisine}</td>
+                  <td className="px-4 py-3 text-gray-700">{restaurant.rating ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                    {restaurant.deliveryTime ?? '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                        restaurant.isOpen === false
+                          ? 'bg-gray-100 text-gray-600'
+                          : 'bg-green-50 text-green-700'
+                      }`}
+                    >
+                      {restaurant.isOpen === false ? 'Closed' : 'Open'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <RowActions
+                      itemName={restaurant.name}
+                      onEdit={() => openForm(restaurant)}
+                      onDelete={() => handleDelete(restaurant)}
+                      isDeleting={deleteMutation.isPending}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </AdminTable>
+          <AdminPagination
+            page={page}
+            pageSize={pageSize}
+            totalPages={restaurantPage?.totalPages ?? 0}
+            totalElements={restaurantPage?.totalElements ?? 0}
+            itemLabel="restaurants"
+            onPageChange={setPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPage(0);
+            }}
+          />
+        </>
       )}
     </section>
   );

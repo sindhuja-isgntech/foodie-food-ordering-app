@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react';
 
 // Small building blocks shared by the admin management pages.
 
@@ -25,7 +25,7 @@ export const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({
       <button
         type="button"
         onClick={onAction}
-        className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold rounded-xl shadow-md transition"
+        className="flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-700"
       >
         <Plus className="w-4 h-4" />
         {actionLabel}
@@ -53,7 +53,7 @@ export const FormCard: React.FC<FormCardProps> = ({
 }) => (
   <form
     onSubmit={onSubmit}
-    className="mb-8 bg-white p-5 sm:p-6 rounded-2xl border border-orange-200 shadow-sm"
+    className="mb-8 rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm sm:p-6"
     noValidate
   >
     <h2 className="text-lg font-bold text-gray-800 mb-4">{title}</h2>
@@ -63,14 +63,14 @@ export const FormCard: React.FC<FormCardProps> = ({
       <button
         type="button"
         onClick={onCancel}
-        className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-50 transition"
+        className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
       >
         Cancel
       </button>
       <button
         type="submit"
         disabled={isSaving}
-        className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white text-sm font-bold rounded-xl shadow-md transition"
+        className="rounded-lg bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 disabled:cursor-wait disabled:bg-gray-300"
       >
         {isSaving ? 'Saving...' : 'Save'}
       </button>
@@ -100,7 +100,7 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
       </span>
       <select
         ref={ref}
-        className={`w-full px-4 py-2.5 bg-gray-50 border rounded-xl text-gray-900 text-sm focus:bg-white focus:outline-none focus:ring-2 ${
+        className={`w-full rounded-lg border bg-gray-50/60 px-3 py-2.5 text-sm text-gray-900 focus:bg-white focus:outline-none focus:ring-2 ${
           error
             ? 'border-red-500 focus:ring-red-200'
             : 'border-gray-200 focus:ring-orange-500/20 focus:border-orange-500'
@@ -122,12 +122,7 @@ interface CheckboxFieldProps extends React.InputHTMLAttributes<HTMLInputElement>
 export const CheckboxField = React.forwardRef<HTMLInputElement, CheckboxFieldProps>(
   ({ label, ...props }, ref) => (
     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 self-end py-2.5">
-      <input
-        ref={ref}
-        type="checkbox"
-        className="w-4 h-4 rounded accent-orange-500"
-        {...props}
-      />
+      <input ref={ref} type="checkbox" className="w-4 h-4 rounded accent-orange-500" {...props} />
       {label}
     </label>
   ),
@@ -139,9 +134,9 @@ export const AdminTable: React.FC<{ headers: string[]; children: React.ReactNode
   headers,
   children,
 }) => (
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+  <div className="overflow-x-auto rounded-xl border border-gray-200/80 bg-white shadow-sm">
     <table className="w-full min-w-[40rem] text-sm text-left">
-      <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+      <thead className="bg-gray-50/80 text-xs uppercase tracking-wide text-gray-500">
         <tr>
           {headers.map((header) => (
             <th key={header} scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
@@ -155,10 +150,82 @@ export const AdminTable: React.FC<{ headers: string[]; children: React.ReactNode
   </div>
 );
 
-export const EmptyRow: React.FC<{ colSpan: number; message: string }> = ({
-  colSpan,
-  message,
-}) => (
+interface AdminPaginationProps {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  itemLabel: string;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+}
+
+export const AdminPagination: React.FC<AdminPaginationProps> = ({
+  page,
+  pageSize,
+  totalPages,
+  totalElements,
+  itemLabel,
+  onPageChange,
+  onPageSizeChange,
+}) => {
+  const firstItem = totalElements === 0 ? 0 : page * pageSize + 1;
+  const lastItem = Math.min((page + 1) * pageSize, totalElements);
+
+  return (
+    <div className="flex flex-col gap-3 border-t border-gray-200/80 px-4 py-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        Showing{' '}
+        <span className="font-semibold text-gray-900">
+          {firstItem}-{lastItem}
+        </span>{' '}
+        of <span className="font-semibold text-gray-900">{totalElements}</span> {itemLabel}
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-xs font-medium text-gray-500">
+          Rows
+          <select
+            value={pageSize}
+            onChange={(event) => onPageSizeChange(Number(event.target.value))}
+            className="rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm text-gray-700 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/15"
+            aria-label={`Rows per page for ${itemLabel}`}
+          >
+            {[10, 25, 50].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </label>
+        <span className="min-w-20 text-center text-xs font-medium text-gray-500">
+          Page {totalPages === 0 ? 0 : page + 1} of {totalPages}
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onPageChange(page - 1)}
+            disabled={page <= 0}
+            aria-label="Previous page"
+            className="rounded-md border border-gray-200 p-1.5 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onPageChange(page + 1)}
+            disabled={totalPages === 0 || page >= totalPages - 1}
+            aria-label="Next page"
+            className="rounded-md border border-gray-200 p-1.5 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const EmptyRow: React.FC<{ colSpan: number; message: string }> = ({ colSpan, message }) => (
   <tr>
     <td colSpan={colSpan} className="px-4 py-10 text-center text-gray-400">
       {message}

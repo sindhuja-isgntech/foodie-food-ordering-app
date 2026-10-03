@@ -8,6 +8,7 @@ import Loader from '../../components/common/Loader';
 import ErrorState from '../../components/common/ErrorState';
 import {
   AdminPageHeader,
+  AdminPagination,
   AdminTable,
   CheckboxField,
   EmptyRow,
@@ -25,6 +26,7 @@ import type {
   FoodItemInput,
 } from '../../services/adminService';
 import { getErrorMessage } from '../../services/orderService';
+import { useFeedback } from '../../context/useFeedback';
 
 const foodSchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters'),
@@ -141,26 +143,31 @@ const FoodForm: React.FC<FoodFormProps> = ({
 
 export const ManageFoods: React.FC = () => {
   const queryClient = useQueryClient();
+  const { showToast, confirm } = useFeedback();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   // undefined = form closed, null = adding a new food item
   const [editing, setEditing] = useState<AdminFoodItem | null | undefined>(undefined);
   const [restaurantFilter, setRestaurantFilter] = useState<number | null>(null);
   const [actionError, setActionError] = useState('');
 
-  const foodsQuery = useQuery({ queryKey: adminKeys.foods, queryFn: adminApi.fetchFoods });
+  const foodsQuery = useQuery({
+    queryKey: [...adminKeys.foods, page, pageSize, restaurantFilter],
+    queryFn: () => adminApi.fetchFoods(page, pageSize, restaurantFilter),
+  });
   const restaurantsQuery = useQuery({
-    queryKey: adminKeys.restaurants,
-    queryFn: adminApi.fetchRestaurants,
+    queryKey: adminKeys.restaurantOptions,
+    queryFn: adminApi.fetchRestaurantOptions,
   });
   const categoriesQuery = useQuery({
-    queryKey: adminKeys.categories,
-    queryFn: adminApi.fetchCategories,
+    queryKey: adminKeys.categoryOptions,
+    queryFn: adminApi.fetchCategoryOptions,
   });
 
   const restaurants = restaurantsQuery.data ?? [];
   const categories = categoriesQuery.data ?? [];
-  const foods = (foodsQuery.data ?? []).filter(
-    (food) => restaurantFilter === null || food.restaurantId === restaurantFilter,
-  );
+  const foodPage = foodsQuery.data;
+  const foods = foodPage?.content ?? [];
   const isLoading = foodsQuery.isLoading || restaurantsQuery.isLoading || categoriesQuery.isLoading;
   const error = foodsQuery.error ?? restaurantsQuery.error ?? categoriesQuery.error;
 
@@ -174,15 +181,23 @@ export const ManageFoods: React.FC = () => {
   const saveMutation = useMutation({
     mutationFn: (input: FoodItemInput) =>
       editing ? adminApi.updateFood(editing.id, input) : adminApi.createFood(input),
-    onSuccess: () => {
+    onSuccess: (saved) => {
       refresh();
+      showToast({
+        title: editing ? 'Food item updated successfully' : 'Food item added successfully',
+        description: `"${saved.name}" has been saved.`,
+      });
       setEditing(undefined);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: adminApi.deleteFood,
-    onSuccess: refresh,
+    mutationFn: (item: AdminFoodItem) => adminApi.deleteFood(item.id),
+    onSuccess: (_result, item) => {
+      showToast({ title: 'Food item deleted', description: `"${item.name}" has been removed.` });
+      if (page > 0 && foodPage?.content.length === 1) setPage(page - 1);
+      refresh();
+    },
     onError: (err) => setActionError(getErrorMessage(err, 'Could not delete food item.')),
   });
 
@@ -191,10 +206,15 @@ export const ManageFoods: React.FC = () => {
     setEditing(food);
   };
 
-  const handleDelete = (food: AdminFoodItem) => {
-    if (window.confirm(`Delete "${food.name}" from ${food.restaurantName ?? 'the menu'}?`)) {
+  const handleDelete = async (item: AdminFoodItem) => {
+    const confirmed = await confirm({
+      title: 'Delete food item?',
+      message: `"${item.name}" will be removed from ${item.restaurantName ?? 'the menu'}. This cannot be undone.`,
+      confirmLabel: 'Delete food item',
+    });
+    if (confirmed) {
       setActionError('');
-      deleteMutation.mutate(food.id);
+      deleteMutation.mutate(item);
     }
   };
 
@@ -231,7 +251,10 @@ export const ManageFoods: React.FC = () => {
         <SelectField
           label="Filter by restaurant"
           value={restaurantFilter ?? ''}
-          onChange={(e) => setRestaurantFilter(toNullableNumber(e.target.value))}
+          onChange={(e) => {
+            setRestaurantFilter(toNullableNumber(e.target.value));
+            setPage(0);
+          }}
         >
           <option value="">All restaurants</option>
           {restaurants.map((restaurant) => (
@@ -254,57 +277,71 @@ export const ManageFoods: React.FC = () => {
           }}
         />
       ) : (
-        <AdminTable headers={['Item', 'Restaurant', 'Category', 'Price', 'Status', '']}>
-          {foods.length === 0 ? (
-            <EmptyRow colSpan={6} message="No food items found." />
-          ) : (
-            foods.map((food) => (
-              <tr key={food.id} className="hover:bg-gray-50/60">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {food.imageUrl ? (
-                      <img
-                        src={food.imageUrl}
-                        alt=""
-                        className="w-10 h-10 rounded-lg object-cover bg-gray-100"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-orange-50" />
-                    )}
-                    <div>
-                      <p className="font-bold text-gray-900">{food.name}</p>
-                      {food.isVeg && <p className="text-xs font-semibold text-green-600">Veg</p>}
+        <>
+          <AdminTable headers={['Item', 'Restaurant', 'Category', 'Price', 'Status', '']}>
+            {foods.length === 0 ? (
+              <EmptyRow colSpan={6} message="No food items found." />
+            ) : (
+              foods.map((food) => (
+                <tr key={food.id} className="hover:bg-gray-50/60">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      {food.imageUrl ? (
+                        <img
+                          src={food.imageUrl}
+                          alt=""
+                          className="w-10 h-10 rounded-lg object-cover bg-gray-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-orange-50" />
+                      )}
+                      <div>
+                        <p className="font-bold text-gray-900">{food.name}</p>
+                        {food.isVeg && <p className="text-xs font-semibold text-green-600">Veg</p>}
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-gray-700">{food.restaurantName ?? '—'}</td>
-                <td className="px-4 py-3 text-gray-700">{food.categoryName ?? '—'}</td>
-                <td className="px-4 py-3 font-semibold text-gray-900">
-                  ${food.price.toFixed(2)}
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
-                      food.isAvailable === false
-                        ? 'bg-gray-100 text-gray-600'
-                        : 'bg-green-50 text-green-700'
-                    }`}
-                  >
-                    {food.isAvailable === false ? 'Unavailable' : 'Available'}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <RowActions
-                    itemName={food.name}
-                    onEdit={() => openForm(food)}
-                    onDelete={() => handleDelete(food)}
-                    isDeleting={deleteMutation.isPending}
-                  />
-                </td>
-              </tr>
-            ))
-          )}
-        </AdminTable>
+                  </td>
+                  <td className="px-4 py-3 text-gray-700">{food.restaurantName ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-700">{food.categoryName ?? '—'}</td>
+                  <td className="px-4 py-3 font-semibold text-gray-900">
+                    ${food.price.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
+                        food.isAvailable === false
+                          ? 'bg-gray-100 text-gray-600'
+                          : 'bg-green-50 text-green-700'
+                      }`}
+                    >
+                      {food.isAvailable === false ? 'Unavailable' : 'Available'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <RowActions
+                      itemName={food.name}
+                      onEdit={() => openForm(food)}
+                      onDelete={() => handleDelete(food)}
+                      isDeleting={deleteMutation.isPending}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </AdminTable>
+          <AdminPagination
+            page={page}
+            pageSize={pageSize}
+            totalPages={foodPage?.totalPages ?? 0}
+            totalElements={foodPage?.totalElements ?? 0}
+            itemLabel="food items"
+            onPageChange={setPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPage(0);
+            }}
+          />
+        </>
       )}
     </section>
   );

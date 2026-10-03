@@ -32,7 +32,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-lg">
+    <header className="sticky top-0 z-40 bg-white/80 border-b border-stone-200/70 shadow-sm backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 md:h-20 md:py-0 flex flex-wrap items-center justify-between gap-y-2">
         {/* Logo */}
         <Link to={isAdmin ? '/admin' : '/'} className="group flex items-center gap-2.5">
@@ -63,12 +63,12 @@ export const Navbar: React.FC = () => {
                 to={to}
                 aria-current={active ? 'page' : undefined}
                 className={`font-semibold text-sm transition-all duration-300 relative group ${
-                  active ? 'text-orange-600' : 'text-gray-600 hover:text-orange-600'
+                  active ? 'text-orange-600' : 'text-stone-600 hover:text-orange-600'
                 }`}
               >
                 {label}
                 <span
-                  className={`absolute bottom-0 left-0 h-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`}
+                  className={`absolute bottom-0 left-0 h-1 rounded-full bg-orange-600 transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`}
                 />
               </Link>
             );
@@ -82,7 +82,7 @@ export const Navbar: React.FC = () => {
               type="button"
               onClick={handleLogout}
               aria-label="Log out"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-200 text-gray-700 text-sm font-semibold transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-stone-200 text-stone-700 text-sm font-semibold transition-all duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Log out</span>
@@ -92,12 +92,12 @@ export const Navbar: React.FC = () => {
               {/* Cart Icon */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-full transition-all duration-300 group"
+                className="relative p-2.5 text-stone-700 hover:bg-orange-50 hover:text-orange-600 rounded-full transition-all duration-300 group"
                 aria-label={totalItems > 0 ? `Shopping Cart, ${totalItems} items` : 'Shopping Cart'}
               >
                 <ShoppingBag className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                 {totalItems > 0 && (
-                  <span className="absolute top-1 right-1 bg-gradient-to-br from-orange-500 to-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg shadow-orange-500/50 animate-pulse">
+                  <span className="absolute top-1 right-1 bg-orange-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center ring-2 ring-white">
                     {totalItems}
                   </span>
                 )}
@@ -109,11 +109,11 @@ export const Navbar: React.FC = () => {
                   to="/profile"
                   className={`flex items-center gap-2 px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-full border transition-all duration-300 transform hover:scale-105 ${
                     location.pathname === '/profile'
-                      ? 'border-orange-500 bg-gradient-to-r from-orange-50 to-orange-100 text-orange-600 shadow-lg shadow-orange-500/20'
-                      : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50 text-gray-700'
+                      ? 'border-orange-200 bg-orange-50 text-orange-700'
+                      : 'border-stone-200 hover:border-orange-300 hover:bg-orange-50 text-stone-700'
                   }`}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 text-orange-600 rounded-full flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center font-bold text-xs">
                     <User className="w-4 h-4" />
                   </div>
                   <span className="hidden sm:inline font-semibold text-sm">Profile</span>
@@ -121,7 +121,7 @@ export const Navbar: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="px-4 py-2.5 sm:px-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm rounded-full shadow-lg shadow-orange-500/30 transition-all duration-300 transform hover:scale-105"
+                  className="px-4 py-2.5 sm:px-6 bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm rounded-full shadow-md shadow-orange-600/25 transition-all duration-300"
                 >
                   Sign In
                 </Link>

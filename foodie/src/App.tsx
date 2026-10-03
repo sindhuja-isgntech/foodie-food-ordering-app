@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import type { Role } from './types/auth';
 import { CartProvider } from './context/CartContext';
 import { OrderProvider } from './context/OrderContext';
+import { FeedbackProvider } from './context/FeedbackContext';
 import Navbar from './components/Navbar';
 import CartDrawer from './components/cart/CartDrawer';
 import Footer from './components/Footer';
@@ -68,53 +69,58 @@ const ProtectedRoute = ({ requiredRole }: { requiredRole?: Role }) => {
 export default function App(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <OrderProvider>
-            <BrowserRouter>
-              <div className="min-h-dvh w-full bg-white font-sans flex flex-col">
-                <div className="min-w-0 flex-1">
-                  <Navbar />
-                  <main className="min-w-0">
-                    <Routes>
-            {/* Public Auth Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/restaurants" element={<RestaurantsPage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
+      <FeedbackProvider>
+        <AuthProvider>
+          <CartProvider>
+            <OrderProvider>
+              <BrowserRouter>
+                <div className="app-shell min-h-dvh w-full font-sans flex flex-col">
+                  <div className="min-w-0 flex-1">
+                    <Navbar />
+                    <main className="min-w-0">
+                      <Routes>
+                        {/* Public Auth Routes */}
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/restaurants" element={<RestaurantsPage />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
 
-            {/* Customers return to the home page after authentication. */}
-            <Route element={<ProtectedRoute requiredRole="CUSTOMER" />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/restaurant/:id" element={<RestaurantDetails />} />
-              <Route path="/food/:id" element={<FoodDetails />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/cart" element={<div className="p-8 font-bold">Customer Cart</div>} />
-              <Route path="/orders" element={<Orders />} />
-            </Route>
+                        {/* Customers return to the home page after authentication. */}
+                        <Route element={<ProtectedRoute requiredRole="CUSTOMER" />}>
+                          <Route path="/" element={<HomePage />} />
+                          <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+                          <Route path="/food/:id" element={<FoodDetails />} />
+                          <Route path="/checkout" element={<Checkout />} />
+                          <Route path="/profile" element={<Profile />} />
+                          <Route
+                            path="/cart"
+                            element={<div className="p-8 font-bold">Customer Cart</div>}
+                          />
+                          <Route path="/orders" element={<Orders />} />
+                        </Route>
 
-            {/* Admin Routes */}
-            <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/restaurants" element={<ManageRestaurants />} />
-              <Route path="/admin/categories" element={<ManageCategories />} />
-              <Route path="/admin/foods" element={<ManageFoods />} />
-              <Route path="/admin/orders" element={<ManageOrders />} />
-            </Route>
+                        {/* Admin Routes */}
+                        <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
+                          <Route path="/admin" element={<AdminDashboard />} />
+                          <Route path="/admin/restaurants" element={<ManageRestaurants />} />
+                          <Route path="/admin/categories" element={<ManageCategories />} />
+                          <Route path="/admin/foods" element={<ManageFoods />} />
+                          <Route path="/admin/orders" element={<ManageOrders />} />
+                        </Route>
 
-            <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </main>
+                  </div>
+                  <Footer />
                 </div>
-                <Footer />
-              </div>
-              <CartDrawer />
-            </BrowserRouter>
-          </OrderProvider>
-        </CartProvider>
-      </AuthProvider>
+                <CartDrawer />
+              </BrowserRouter>
+            </OrderProvider>
+          </CartProvider>
+        </AuthProvider>
+      </FeedbackProvider>
     </QueryClientProvider>
   );
 }

@@ -37,63 +37,64 @@ export default function RegisterPage(): React.JSX.Element {
   };
 
   return (
-    <div className="min-h-[60vh] w-full flex items-center justify-center bg-gray-50 px-3 py-8 sm:p-4">
-      <div className="max-w-md w-full bg-white p-5 sm:p-8 rounded-lg shadow-md border">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create your Account</h2>
+    <div className="flex min-h-[60vh] w-full items-center justify-center bg-[#fbf8f4] px-3 py-10 sm:p-6">
+      <div className="w-full max-w-md rounded-2xl border border-stone-200/80 bg-white p-5 shadow-lg shadow-stone-900/5 sm:p-8">
+        <p className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.16em] text-orange-700">Join Foodie</p>
+        <h2 className="mb-6 text-center text-2xl font-bold tracking-tight text-stone-900">Create your account</h2>
 
-        {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
+        {error && <div className="mb-4 rounded-lg border border-red-100 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">Full name</label>
             <input
               type="text"
               required
-              className="w-full border p-2 rounded focus:ring-2 focus:ring-orange-500 outline-none"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50/50 px-3 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/15"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">Email address</label>
             <input
               type="email"
               required
-              className="w-full border p-2 rounded focus:ring-2 focus:ring-orange-500 outline-none"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50/50 px-3 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/15"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">Mobile number</label>
             <input
               type="text"
               required
               maxLength={10}
               placeholder="10 digit mobile"
-              className="w-full border p-2 rounded focus:ring-2 focus:ring-orange-500 outline-none"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50/50 px-3 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/15"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">Password</label>
             <input
               type="password"
               required
-              className="w-full border p-2 rounded focus:ring-2 focus:ring-orange-500 outline-none"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50/50 px-3 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/15"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Account Role</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">Account role</label>
             <select
-              className="w-full border p-2 rounded focus:ring-2 focus:ring-orange-500 outline-none bg-white"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50/50 px-3 py-2.5 text-sm outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/15"
               value={role}
               onChange={(e) => setRole(e.target.value as Role)}
             >
@@ -105,15 +106,15 @@ export default function RegisterPage(): React.JSX.Element {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-600 text-white py-2 rounded font-semibold hover:bg-orange-700 transition"
+            className="w-full rounded-lg bg-orange-600 py-3 font-semibold text-white shadow-sm shadow-orange-900/15 transition hover:bg-orange-700 disabled:cursor-wait disabled:opacity-70"
           >
             {loading ? 'Registering...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-stone-600">
           Already registered?{' '}
-          <Link to="/login" className="text-orange-600 font-medium hover:underline">
+          <Link to="/login" className="font-semibold text-orange-700 hover:text-orange-800 hover:underline">
             Login here
           </Link>
         </p>

@@ -29,12 +29,12 @@ export const Categories: React.FC = () => {
   if (isLoading) {
     return (
       <section className="max-w-7xl mx-auto px-4 py-12 sm:px-6">
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Explore Categories</h2>
+        <h2 className="mb-8 text-2xl font-bold text-stone-900">Explore Categories</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl animate-pulse"
+              className="h-32 bg-gradient-to-br from-stone-200 to-stone-300 rounded-2xl animate-pulse"
               style={{
                 backgroundImage: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
                 backgroundSize: '200% 100%',
@@ -49,9 +49,9 @@ export const Categories: React.FC = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12 sm:px-6">
-      <div className="mb-8">
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Explore Categories</h2>
-        <p className="text-gray-500 text-sm">Discover cuisines from around the world</p>
+      <div className="mb-7">
+        <h2 className="mb-2 text-2xl font-bold text-stone-900">Explore Categories</h2>
+        <p className="text-stone-500 text-sm">Discover cuisines from around the world</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
         {displayCategories.map((cat, index) => (
@@ -64,19 +64,16 @@ export const Categories: React.FC = () => {
             }}
           >
             <div
-              className="flex flex-col items-center justify-center p-6 rounded-2xl cursor-pointer transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-md hover:shadow-xl border border-transparent hover:border-orange-200"
-              style={{
-                background: `linear-gradient(135deg, ${['#fff5f0', '#fff8e1', '#f0f4ff', '#f5f0ff', '#f0fff4', '#fffbf0'][index % 6]} 0%, white 100%)`,
-              }}
+              className="flex flex-col items-center justify-center rounded-xl border border-stone-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-md"
             >
-              <span className="text-4xl mb-3 group-hover:scale-125 transition-transform duration-300">
+              <span className="mb-3 text-4xl transition-transform duration-300 group-hover:scale-110">
                 {cat.imageUrl ? (
                   <img src={cat.imageUrl} alt="" className="h-10 w-10 rounded-full object-cover" />
                 ) : (
                   cat.icon
                 )}
               </span>
-              <span className="text-sm font-bold text-gray-700 group-hover:text-orange-600 transition-colors duration-300 text-center">
+              <span className="text-sm font-bold text-stone-700 group-hover:text-orange-600 transition-colors duration-300 text-center">
                 {cat.name}
               </span>
             </div>

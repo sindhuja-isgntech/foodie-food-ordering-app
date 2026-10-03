@@ -317,25 +317,25 @@ export const RestaurantDetails: React.FC = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <button
         onClick={() => navigate('/restaurants')}
-        className="flex items-center gap-2 text-gray-600 hover:text-orange-500 mb-6 font-medium transition"
+        className="mb-6 flex items-center gap-2 text-sm font-medium text-stone-600 transition hover:text-orange-700"
       >
         <ArrowLeft className="w-5 h-5" /> Back to Restaurants
       </button>
 
       {/* Banner */}
-      <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden mb-8">
+      <div className="relative mb-8 h-64 overflow-hidden rounded-2xl md:h-80">
         <img src={restaurant.img} alt={restaurant.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6 md:p-8">
           <div className="text-white">
-            <span className="bg-orange-500 text-xs px-3 py-1 rounded-full font-semibold uppercase">
+            <span className="rounded-md bg-orange-600 px-2.5 py-1 text-xs font-semibold uppercase">
               {restaurant.tag}
             </span>
             <h1 className="text-3xl md:text-4xl font-extrabold mt-2">{restaurant.name}</h1>
-            <p className="text-gray-300 text-sm mt-1 max-w-xl">{restaurant.description}</p>
-            <div className="flex flex-wrap items-center gap-4 text-sm mt-3 text-gray-200">
+            <p className="text-stone-300 text-sm mt-1 max-w-xl">{restaurant.description}</p>
+            <div className="flex flex-wrap items-center gap-4 text-sm mt-3 text-stone-200">
               <span className="flex items-center gap-1 font-semibold text-amber-400">
                 <Star className="w-4 h-4 fill-amber-400" /> {restaurant.rating}
               </span>
@@ -353,7 +353,7 @@ export const RestaurantDetails: React.FC = () => {
       {/* Category Filter Tabs */}
       {menu && (
         <div className="mb-8 border-b pb-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Menu</h2>
+          <h2 className="text-xl font-bold text-stone-800 mb-4">Menu</h2>
           <div className="flex gap-2 overflow-x-auto">
             {menu.categories.map((cat) => (
               <button
@@ -361,8 +361,8 @@ export const RestaurantDetails: React.FC = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-5 py-2 rounded-full font-semibold text-sm transition shrink-0 ${
                   selectedCategory === cat
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-orange-600 text-white'
+                    : 'bg-white text-stone-600 ring-1 ring-stone-200 hover:bg-stone-50'
                 }`}
               >
                 {cat}
